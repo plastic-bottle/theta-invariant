@@ -31,13 +31,13 @@
 #define MAX(a, b) ((a > b) ? a : b)
 #define MIN(a, b) ((a < b) ? a : b)
 
-/*Symbolic constants for yes and no*/
+/* Symbolic constants for yes and no */
 enum { YES, NO };
 
 /* Functions to safely use malloc, calloc, and free */
-void* safe_malloc(size_t);
-void* safe_calloc(size_t, size_t);
-void safe_free(void*);
+extern void* safe_malloc(const size_t size);
+extern void* safe_calloc(const size_t n, const size_t size);
+extern void safe_free(void* allocated_pointer);
 
 /* Struct for regular polynomial */
 /* coeffs[n] stores the coefficient of x^n */
@@ -54,29 +54,30 @@ struct laurent_polynomial {
 	signed int* coeffs;
 };
 
-/*Struct for crossing in PD notation; first entry of data is the undercrossing which points at
-the crossing (when the knot is given an orientation), and then lists arcs in clockwise order
-(this is different from many other PD codes, which go in counterclockwise order) */
+/* Struct for crossing in PD notation; first entry of data is the undercrossing which points at
+   the crossing (when the knot is given an orientation), and then lists arcs in clockwise order
+   (this is different from many other PD codes, which go in counterclockwise order) */
 struct crossing {
 	int data[4];
 };
 
-/*Struct for knot in PD notation; contains number of crossings and data of all crossings */
+/* Struct for knot in PD notation; contains number of crossings and data of all crossings */
 struct knot {
 	int number_of_crossings;
 	struct crossing* crossings;
 };
 
-struct knot make_knot(int, struct crossing*);
-int* rotation_numbers(struct knot*);
+extern struct knot make_knot(const int number_of_crossings, struct crossing* const crossings);
+extern int* rotation_numbers(const struct knot* const K);
 
-/*Struct for linked list of integers; stores integer value and pointers to previous/next elements*/
+/* Struct for linked list of integers; stores integer value and pointers to previous/next elements */
 struct linked_list {
 	int value;
 	struct linked_list* previous;
 	struct linked_list* next;
 };
 
-struct linked_list* insert_linked_list(int, struct linked_list*, struct linked_list*);
-void delete_linked_list(struct linked_list*);
+extern struct linked_list* insert_linked_list(int value, struct linked_list* previous, struct linked_list* next);
+extern void delete_linked_list(struct linked_list* LL);
+
 #endif

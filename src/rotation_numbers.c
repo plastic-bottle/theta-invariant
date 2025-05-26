@@ -20,7 +20,8 @@
 #include "theta_implementation.h"
 
 /*Function which returns an array of rotation numbers for a knot; based off Bar-Natan's code in Mathematica*/
-int* rotation_numbers(struct knot* K) {
+int* rotation_numbers(const struct knot* const K) 
+{
 	int n = K->number_of_crossings;
 
 	/*Strand positions are 1 and 2 for incoming over/under crossings at a positive crossing, and -1 and -2 for incoming
@@ -54,7 +55,7 @@ int* rotation_numbers(struct knot* K) {
 		int negative_occurs = NO;
 		struct linked_list* current_element = front_strand;
 		while (current_element != NULL) {
-			if (current_element == -strand) {
+			if (current_element->value == -strand) {
 				negative_occurs = YES;
 				break;
 			}
@@ -77,7 +78,7 @@ int* rotation_numbers(struct knot* K) {
 				if (current_element->value == strand) {
 					delete_linked_list(current_element);
 					int pair = strand_pairs[strand];
-					int* LL;
+					struct linked_list* LL;
 					if (strand_positions[strand] == 1 || strand_positions[strand] == -2) {
 						LL = insert_linked_list(-pair, current_element->previous, current_element->next);
 						LL = insert_linked_list(strand + 1, current_element->previous, LL);

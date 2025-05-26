@@ -20,7 +20,8 @@
 #include "theta_implementation.h"
 
 /*Function to delete element from linked list*/
-void delete_linked_list(struct linked_list* LL) {
+void delete_linked_list(struct linked_list* LL) 
+{
 	if (LL->previous != NULL) {
 		LL->previous->next = LL->next;
 	}

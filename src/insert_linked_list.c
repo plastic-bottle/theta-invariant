@@ -20,7 +20,8 @@
 #include "theta_implementation.h"
 
 /*Function to insert element into linked list*/
-struct linked_list* insert_linked_list(int value, struct linked_list* previous, struct linked_list* next) {
+struct linked_list* insert_linked_list(int value, struct linked_list* previous, struct linked_list* next) 
+{
 	struct linked_list* temp = (struct linked_list*)safe_malloc(sizeof(struct linked_list));
 	temp->value = value;
 	temp->previous = previous;
