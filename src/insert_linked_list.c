@@ -26,10 +26,10 @@ struct linked_list* insert_linked_list(int value, struct linked_list* previous, 
 	temp->value = value;
 	temp->previous = previous;
 	temp->next = next;
-	return temp;
 
 	if (previous != NULL)
 		previous->next = temp;
 	if (next != NULL)
 		next->previous = temp;
+	return temp;
 }
