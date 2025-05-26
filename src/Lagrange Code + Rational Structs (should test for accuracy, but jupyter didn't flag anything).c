@@ -1,9 +1,5 @@
-#include <stdio.h>
-#include <stdlib.h>
-struct polynomial{
-int degree;
-int *coeffs; //coeff[0] gives constant term and so on.
-};
+#include "theta_implementation.h"
+
 struct polynomial polysum(struct polynomial p1,struct polynomial p2){
     struct polynomial output;
     int counter;

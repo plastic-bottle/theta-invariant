@@ -20,6 +20,7 @@
 #ifndef THETA_IMPL_H
 #define THETA_IMPL_H
 
+#include <stdio.h>
 #include <stdlib.h>
 
 /* The maximum allowable number of crossings a knot can have for the computation of the theta invariant */
@@ -33,6 +34,13 @@
 void* safe_malloc(size_t);
 void* safe_calloc(size_t, size_t);
 void safe_free(void*);
+
+/* Struct for regular polynomial */
+/* coeffs[n] stores the coefficient of x^n */
+struct polynomial{
+    int degree;
+    int *coeffs;
+};
 
 /* Struct for laurent polynomial */
 /* Stores coefficients, highest degree, and lowest degree of polyonmial */
