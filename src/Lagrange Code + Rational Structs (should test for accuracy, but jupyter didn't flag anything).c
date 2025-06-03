@@ -121,10 +121,10 @@ struct rational ratsum(struct rational r1, struct rational r2){
     for (counter = 0; counter<=output.numerator.degree; counter++){
         output.numerator.coeffs[counter] = polysum(polyprod(r1.numerator, r2.denominator), polyprod(r1.denominator, r2.numerator)).coeffs[counter];
     }
-    output.numerator.degree = polyprod(r1.denominator, r2.denominator).degree;
-    output.numerator.coeffs = malloc((output.numerator.degree+1)*sizeof(float));
+    output.denominator.degree = polyprod(r1.denominator, r2.denominator).degree;
+    output.denominator.coeffs = malloc((output.numerator.degree+1)*sizeof(float));
     for (counter = 0; counter<=output.numerator.degree; counter++){
-        output.numerator.coeffs[counter] = polyprod(r1.denominator, r2.denominator).coeffs[counter];
+        output.denominator.coeffs[counter] = polyprod(r1.denominator, r2.denominator).coeffs[counter];
     }
     return output;
 }
@@ -136,10 +136,10 @@ struct rational ratdiff(struct rational r1, struct rational r2){
     for (counter = 0; counter<=output.numerator.degree; counter++){
         output.numerator.coeffs[counter] = polydiff(polyprod(r1.numerator, r2.denominator), polyprod(r1.denominator, r2.numerator)).coeffs[counter];
     }
-    output.numerator.degree = polyprod(r1.denominator, r2.denominator).degree;
-    output.numerator.coeffs = malloc((output.numerator.degree+1)*sizeof(float));
+    output.denominator.degree = polyprod(r1.denominator, r2.denominator).degree;
+    output.denominator.coeffs = malloc((output.numerator.degree+1)*sizeof(float));
     for (counter = 0; counter<=output.numerator.degree; counter++){
-        output.numerator.coeffs[counter] = polyprod(r1.denominator, r2.denominator).coeffs[counter];
+        output.denominator.coeffs[counter] = polyprod(r1.denominator, r2.denominator).coeffs[counter];
     }
     return output;
 }
@@ -151,10 +151,10 @@ struct rational ratprod(struct rational r1, struct rational r2){
     for (counter = 0; counter<=output.numerator.degree; counter++){
         output.numerator.coeffs[counter] = polyprod(r1.numerator, r2.numerator).coeffs[counter];
     }
-    output.numerator.degree = polyprod(r1.denominator, r2.denominator).degree;
-    output.numerator.coeffs = malloc((output.numerator.degree+1)*sizeof(float));
+    output.denominator.degree = polyprod(r1.denominator, r2.denominator).degree;
+    output.denominator.coeffs = malloc((output.numerator.degree+1)*sizeof(float));
     for (counter = 0; counter<=output.numerator.degree; counter++){
-        output.numerator.coeffs[counter] = polyprod(r1.denominator, r2.denominator).coeffs[counter];
+        output.denominator.coeffs[counter] = polyprod(r1.denominator, r2.denominator).coeffs[counter];
     }
     return output;
 }
@@ -166,10 +166,10 @@ struct rational ratquot(struct rational r1, struct rational r2){
     for (counter = 0; counter<=output.numerator.degree; counter++){
         output.numerator.coeffs[counter] = polyprod(r1.numerator, r2.denominator).coeffs[counter];
     }
-    output.numerator.degree = polyprod(r1.denominator, r2.numerator).degree;
-    output.numerator.coeffs = malloc((output.numerator.degree+1)*sizeof(float));
+    output.denominator.degree = polyprod(r1.denominator, r2.numerator).degree;
+    output.denominator.coeffs = malloc((output.numerator.degree+1)*sizeof(float));
     for (counter = 0; counter<=output.numerator.degree; counter++){
-        output.numerator.coeffs[counter] = polyprod(r1.denominator, r2.numerator).coeffs[counter];
+        output.denominator.coeffs[counter] = polyprod(r1.denominator, r2.numerator).coeffs[counter];
     }
     return output;
 }
