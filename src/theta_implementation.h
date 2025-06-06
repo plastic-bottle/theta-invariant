@@ -58,7 +58,7 @@ struct laurent_polynomial {
 };
 
 /* Macro for accessing elements of a pointer to a matrix */
-#define MATRIX_ELEMENT(A, row, col) A->data[row * A->number_of_rows + col]
+#define MATRIX_ELEMENT(A, row, col) A->data[row * A->cols + col]
 
 /* Matrix of polynomial structs */
 struct polynomial_matrix {
