@@ -24,6 +24,8 @@
 #include <stdlib.h>
 #include <math.h>
 
+
+
  /* The maximum allowable number of crossings a knot can have for the computation of the theta invariant */
 #define MAX_CROSSINGS (32)
 
@@ -37,10 +39,14 @@ enum { YES, NO };
 /* Macro for floating point data type we are using */
 #define THETA_FLOAT double
 
+
+
 /* Functions to safely use malloc, calloc, and free */
 extern void* safe_malloc(const size_t size);
 extern void* safe_calloc(const size_t n, const size_t size);
 extern void safe_free(void* allocated_pointer);
+
+
 
 /* Struct for regular polynomial */
 /* coeffs[n] stores the coefficient of x^n */
@@ -56,6 +62,8 @@ struct laurent_polynomial {
 	signed int highest_degree;
 	signed int* coeffs;
 };
+
+
 
 /* Macro for accessing elements of a pointer to a matrix */
 #define MATRIX_ELEMENT(A, row, col) A->data[row * A->cols + col]
@@ -74,6 +82,17 @@ struct float_matrix {
 	THETA_FLOAT* data;
 };
 
+/* Puts float matrix A into REF without scaling any rows to preserve determinant */
+struct float_matrix* row_echelon_form(struct float_matrix* A);
+
+/* Returns the determinant of A, and populates matrix result with the entries of the adjugate of A */
+THETA_FLOAT float_adjugate(struct float_matrix* A, struct float_matrix* result);
+
+/* Returns the adjugate of polynomial matrix A via Lagrange interpolation at consecutive integers starting from start_t */
+struct polynomial_matrix* lagrange_polynomial_adjugate(struct polynomial_matrix* A, int start_t);
+
+
+
 /* Struct for crossing in PD notation; first entry of data is the undercrossing which points at
    the crossing (when the knot is given an orientation), and then lists arcs in clockwise order
    (this is different from many other PD codes, which go in counterclockwise order) */
@@ -89,6 +108,8 @@ struct knot {
 
 extern struct knot make_knot(const int number_of_crossings, struct crossing* const crossings);
 extern int* rotation_numbers(const struct knot* const K);
+
+
 
 /* Struct for linked list of integers; stores integer value and pointers to previous/next elements */
 struct linked_list {
