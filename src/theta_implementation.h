@@ -34,6 +34,9 @@
 /* Symbolic constants for yes and no */
 enum { YES, NO };
 
+/* Macro for floating point data type we are using */
+#define THETA_FLOAT double
+
 /* Functions to safely use malloc, calloc, and free */
 extern void* safe_malloc(const size_t size);
 extern void* safe_calloc(const size_t n, const size_t size);
@@ -54,10 +57,21 @@ struct laurent_polynomial {
 	signed int* coeffs;
 };
 
+/* Macro for accessing elements of a pointer to a matrix */
+#define MATRIX_ELEMENT(A, row, col) A->data[row * A->number_of_rows + col]
+
 /* Matrix of polynomial structs */
 struct polynomial_matrix {
 	size_t rows;
 	size_t cols;
+	struct polynomial* data;
+};
+
+/* Matrix of floats */
+struct float_matrix {
+	size_t rows;
+	size_t cols;
+	THETA_FLOAT* data;
 };
 
 /* Struct for crossing in PD notation; first entry of data is the undercrossing which points at
