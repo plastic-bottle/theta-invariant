@@ -42,7 +42,7 @@ extern void safe_free(void* allocated_pointer);
 /* Struct for regular polynomial */
 /* coeffs[n] stores the coefficient of x^n */
 struct polynomial {
-	int degree;
+	size_t degree;
 	int* coeffs;
 };
 
@@ -54,6 +54,12 @@ struct laurent_polynomial {
 	signed int* coeffs;
 };
 
+/* Matrix of polynomial structs */
+struct polynomial_matrix {
+	size_t rows;
+	size_t cols;
+};
+
 /* Struct for crossing in PD notation; first entry of data is the undercrossing which points at
    the crossing (when the knot is given an orientation), and then lists arcs in clockwise order
    (this is different from many other PD codes, which go in counterclockwise order) */
@@ -63,7 +69,7 @@ struct crossing {
 
 /* Struct for knot in PD notation; contains number of crossings and data of all crossings */
 struct knot {
-	int number_of_crossings;
+	size_t number_of_crossings;
 	struct crossing* crossings;
 };
 
