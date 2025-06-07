@@ -19,9 +19,11 @@
 
 #include "theta_implementation.h"
 
+#include "tests/row_echelon_form_test.c"
+
 /* Test */
 int main() {
-    
+    test_row_echelon_form();
 
     return 0;
 }

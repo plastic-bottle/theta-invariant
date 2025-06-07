@@ -17,40 +17,38 @@
  *  with theta_invariant. If not, see <https://www.gnu.org/licenses/>.        *
  ******************************************************************************/
 
-#include "theta_implementation.h"
+#include "../theta_implementation.h"
 
-/* Puts float matrix A into REF and stores in result without scaling any rows to preserve determinant */
-/* Assumes that A and result have the same dimensions */
-void row_echelon_form(const struct float_matrix* const A, struct float_matrix* result) 
-{
-    // Copy entries of A into result
-    for (size_t i = 0; i < A->rows; i++) {
-        for (size_t j = 0; j < A->cols; j++) {
-            MATRIX_ELEMENT(result, i, j) = MATRIX_ELEMENT(A, i, j);
+void test_row_echelon_form() {
+    struct float_matrix* A = (struct float_matrix*) safe_malloc(sizeof(struct float_matrix));
+    A->rows = 3;
+    A->cols = 3;
+    A->data = (THETA_FLOAT*) safe_malloc(A->rows * A->cols * sizeof(THETA_FLOAT));
+
+    for (int i = 0; i < 3; i++) {
+        for (int j = 0; j < 3; j++) {
+            MATRIX_ELEMENT(A, i, j) = (i+2) * j - 1.0 + ((j == 2 && i == 2) ? 2.0 : 0.0);
         }
     }
 
-    size_t current_col = 0;
-    THETA_FLOAT pivot, multi;
-    for (size_t i = 0; i < result->rows; i++) {
-        /* Advance current_col to the next nonzero entry in the row */
-        while (MATRIX_ELEMENT(result, i, current_col) == 0) {
-            current_col++;
+    struct float_matrix* result = (struct float_matrix*) safe_malloc(sizeof(struct float_matrix));
+    result->rows = 3;
+    result->cols = 3;
+    result->data = (THETA_FLOAT*) safe_malloc(A->rows * A->cols * sizeof(THETA_FLOAT));
+
+    row_echelon_form(A, result);
+
+    for (int i = 0; i < 3; i++) {
+        for (int j = 0; j < 3; j++) {
+            printf("%f   ", MATRIX_ELEMENT(A, i, j));
         }
+        printf("\n");
+    }
 
-        pivot = MATRIX_ELEMENT(result, i, current_col);
-        for (size_t j = 0; j < result->rows; j++) {
-            if (j == i || MATRIX_ELEMENT(result, j, current_col) == 0) {
-                /* No work to do for this row */
-                continue;
-            }
-
-            multi = MATRIX_ELEMENT(result, j, current_col) / pivot;
-            for (size_t k = current_col; k < result->cols; k++) {
-                MATRIX_ELEMENT(result, j, k) -= multi * MATRIX_ELEMENT(result, i, k);
-            }
+    for (int i = 0; i < 3; i++) {
+        for (int j = 0; j < 3; j++) {
+            printf("%f   ", MATRIX_ELEMENT(result, i, j));
         }
-
-        current_col++;
+        printf("\n");
     }
 }
