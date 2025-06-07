@@ -20,31 +20,61 @@
 #include "../theta_implementation.h"
 
 void float_adjugate_test() {
-    struct float_matrix* A = make_float_matrix(3, 3);
+    int n = 21; // odd
+    THETA_FLOAT t = (n - 1) / 2.0;
+    int N = 2 * n + 1;
 
-    for (int i = 0; i < 3; i++) {
-        for (int j = 0; j < 3; j++) {
-            MATRIX_ELEMENT(A, i, j) = (i+2) * j - 1.0 + ((j == 2 && i == 2) ? 2.0 : 0.0);
+    struct float_matrix* A = make_float_matrix(N, N);
+
+    for (int i = 0; i < N; i++) {
+        for (int j = 0; j < N; j++) {
+            MATRIX_ELEMENT(A, i, j) = 0;
         }
     }
+    for (int i = 0; i < n; i++) {
+        if (i % 2 == 0) {
+            MATRIX_ELEMENT(A, i, i+1) = -t;
+            MATRIX_ELEMENT(A, i, n+i+1) = t-1;
+            MATRIX_ELEMENT(A, n+i, n+i+1) = -1;
+        } else {
+            MATRIX_ELEMENT(A, n+i, n+i+1) = -t;
+            MATRIX_ELEMENT(A, n+i, i+1) = t-1;
+            MATRIX_ELEMENT(A, i, i+1) = -1;
+        }
+    }
+    for (int i = 0; i < N; i++) {
+        MATRIX_ELEMENT(A, i, i) += 1;
+    }
 
-    struct float_matrix* result = make_float_matrix(3, 3);
+    struct float_matrix* result = make_float_matrix(N, N);
 
     THETA_FLOAT determinant = float_adjugate(A, result);
 
-    for (int i = 0; i < 3; i++) {
-        for (int j = 0; j < 3; j++) {
-            printf("%f   ", MATRIX_ELEMENT(A, i, j));
+    for (int i = 0; i < N; i++) {
+        for (int j = 0; j < N; j++) {
+            printf("%f   ", (double) MATRIX_ELEMENT(A, i, j));
         }
         printf("\n");
     }
 
-    printf("\n%f\n\n", determinant);
+    printf("\n%f\n\n", (double) (determinant / ((__int128) 1 << 64)));
 
-    for (int i = 0; i < 3; i++) {
-        for (int j = 0; j < 3; j++) {
-            printf("%f   ", MATRIX_ELEMENT(result, i, j));
+    THETA_FLOAT max_error = 0;
+    THETA_FLOAT error;
+
+    for (int i = 0; i < N; i++) {
+        for (int j = 0; j < N; j++) {
+            error = MATRIX_ELEMENT(result, i, j) - (__int128) MATRIX_ELEMENT(result, i, j);
+            if (error > 0.5) error -= 1;
+            if (error < -0.5) error += 1;
+            if (error < -1 * max_error) {
+                max_error = -1 * error;
+            }
+            if (error > max_error) {
+                max_error = error;
+            }
         }
-        printf("\n");
     }
+
+    printf("%f", (double) max_error);
 }

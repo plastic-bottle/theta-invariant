@@ -34,14 +34,14 @@ void row_echelon_form_test() {
 
     for (int i = 0; i < 3; i++) {
         for (int j = 0; j < 3; j++) {
-            printf("%f   ", MATRIX_ELEMENT(A, i, j));
+            printf("%f   ", (double) MATRIX_ELEMENT(A, i, j));
         }
         printf("\n");
     }
 
     for (int i = 0; i < 3; i++) {
         for (int j = 0; j < 3; j++) {
-            printf("%f   ", MATRIX_ELEMENT(result, i, j));
+            printf("%f   ", (double) MATRIX_ELEMENT(result, i, j));
         }
         printf("\n");
     }

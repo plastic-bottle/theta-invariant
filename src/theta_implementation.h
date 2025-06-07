@@ -37,7 +37,7 @@
 enum { YES, NO };
 
 /* Macro for floating point data type we are using */
-#define THETA_FLOAT double
+#define THETA_FLOAT __float128
 
 
 
@@ -66,7 +66,7 @@ struct laurent_polynomial {
 
 
 /* Macro for accessing elements of a pointer to a matrix */
-#define MATRIX_ELEMENT(A, row, col) A->data[(size_t) row * A->cols + (size_t) col]
+#define MATRIX_ELEMENT(A, row, col) A->data[(size_t) (row) * A->cols + (size_t) (col)]
 
 /* Matrix of polynomial structs */
 struct polynomial_matrix {
