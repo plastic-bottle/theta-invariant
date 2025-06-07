@@ -66,7 +66,7 @@ struct laurent_polynomial {
 
 
 /* Macro for accessing elements of a pointer to a matrix */
-#define MATRIX_ELEMENT(A, row, col) A->data[row * A->cols + col]
+#define MATRIX_ELEMENT(A, row, col) A->data[(size_t) row * A->cols + (size_t) col]
 
 /* Matrix of polynomial structs */
 struct polynomial_matrix {
@@ -82,14 +82,17 @@ struct float_matrix {
 	THETA_FLOAT* data;
 };
 
-/* Puts float matrix A into REF without scaling any rows to preserve determinant */
-struct float_matrix* row_echelon_form(struct float_matrix* A);
+/* Puts float matrix A into REF and stores in result without scaling any rows to preserve determinant */
+/* Assumes that A and result have the same dimensions */
+extern void row_echelon_form(const struct float_matrix* const A, struct float_matrix* result);
 
 /* Returns the determinant of A, and populates matrix result with the entries of the adjugate of A */
-THETA_FLOAT float_adjugate(struct float_matrix* A, struct float_matrix* result);
+/* Assumes that A and result have the same dimensions and are both square */
+extern THETA_FLOAT float_adjugate(const struct float_matrix* const A, struct float_matrix* result);
 
 /* Returns the adjugate of polynomial matrix A via Lagrange interpolation at consecutive integers starting from start_t */
-struct polynomial_matrix* lagrange_polynomial_adjugate(struct polynomial_matrix* A, int start_t);
+/* Assumes that A and result have the same dimensions and are both square */
+extern void lagrange_polynomial_adjugate(const struct polynomial_matrix* const A, struct polynomial_matrix* result, const int start_t);
 
 
 

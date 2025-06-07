@@ -20,13 +20,13 @@
 #include "theta_implementation.h"
 
 /* Function to safely malloc a pointer with a certain amount of memory */
-void* safe_malloc(size_t size) 
+void* safe_malloc(const size_t size) 
 {
 	/* After allocating the pointer, check that it is not null; if it is, then exit the program */
 	void* allocated_pointer = malloc(size);
 
 	if (allocated_pointer == NULL)
 		exit(EXIT_FAILURE);
-        
+
 	return allocated_pointer;
 }
