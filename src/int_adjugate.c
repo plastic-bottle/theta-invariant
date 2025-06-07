@@ -20,9 +20,8 @@
 #include "theta_implementation.h"
 
 /* Returns the determinant of A, and populates matrix result with the entries of the adjugate of A */
-/* A and result are allowed to point to the same memory */
 /* Assumes that A and result have the same dimensions and are both square */
-THETA_FLOAT float_adjugate(struct float_matrix* const A, struct float_matrix* const result)
+extern THETA_INT int_adjugate(struct float_matrix* const A, struct int_matrix* const result)
 {
     size_t N = A->rows;
 
@@ -47,10 +46,11 @@ THETA_FLOAT float_adjugate(struct float_matrix* const A, struct float_matrix* co
     row_echelon_form(augment, augment);
 
     /* Compute determinant */
-    THETA_FLOAT determinant = 1.0;
+    THETA_FLOAT temp_determinant = 1;
     for (size_t i = 0; i < N; i++) {
-        determinant *= MATRIX_ELEMENT(augment, i, i);
+        temp_determinant *= MATRIX_ELEMENT(augment, i, i);
     }
+    THETA_INT determinant = (THETA_INT) (temp_determinant + 0.5);
 
     /* Divide each row by the diagonal entry in the left half and then multiply by the determinant */
     /* This will result in the identity matrix on the left and the adjugate matrix on the right */
@@ -71,7 +71,7 @@ THETA_FLOAT float_adjugate(struct float_matrix* const A, struct float_matrix* co
     /* Write adjugate to result */
     for (size_t i = 0; i < N; i++) {
         for (size_t j = 0; j < N; j++) {
-            MATRIX_ELEMENT(result, i, j) = MATRIX_ELEMENT(augment, i, j + N);
+            MATRIX_ELEMENT(result, i, j) = (THETA_INT) (MATRIX_ELEMENT(augment, i, j + N) + 0.5);
         }
     }
 

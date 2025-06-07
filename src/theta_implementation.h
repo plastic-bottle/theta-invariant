@@ -38,7 +38,7 @@ enum { YES, NO };
 
 /* Macro for floating point data type we are using */
 #define THETA_FLOAT __float128
-
+#define THETA_INT long
 
 
 /* Functions to safely use malloc, calloc, and free */
@@ -82,6 +82,13 @@ struct float_matrix {
 	THETA_FLOAT* data;
 };
 
+/* Matrix of ints */
+struct int_matrix {
+	size_t rows;
+	size_t cols;
+	THETA_INT* data;
+};
+
 /* Allocates memory for a float matrix */
 extern struct float_matrix* make_float_matrix(const size_t rows, const size_t cols);
 
@@ -91,9 +98,8 @@ extern struct float_matrix* make_float_matrix(const size_t rows, const size_t co
 extern void row_echelon_form(struct float_matrix* const A, struct float_matrix* const result);
 
 /* Returns the determinant of A, and populates matrix result with the entries of the adjugate of A */
-/* A and result are allowed to point to the same memory */
 /* Assumes that A and result have the same dimensions and are both square */
-extern THETA_FLOAT float_adjugate(struct float_matrix* const A, struct float_matrix* const result);
+extern THETA_INT int_adjugate(struct float_matrix* const A, struct int_matrix* const result);
 
 /* Returns the adjugate of polynomial matrix A via Lagrange interpolation at consecutive integers starting from start_t */
 /* A and result are allowed to point to the same memory */
