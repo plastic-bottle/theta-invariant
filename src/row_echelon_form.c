@@ -20,13 +20,16 @@
 #include "theta_implementation.h"
 
 /* Puts float matrix A into REF and stores in result without scaling any rows to preserve determinant */
+/* A and result are allowed to point to the same memory */
 /* Assumes that A and result have the same dimensions */
-void row_echelon_form(const struct float_matrix* const A, struct float_matrix* result) 
+void row_echelon_form(struct float_matrix* const A, struct float_matrix* const result) 
 {
-    // Copy entries of A into result
-    for (size_t i = 0; i < A->rows; i++) {
-        for (size_t j = 0; j < A->cols; j++) {
-            MATRIX_ELEMENT(result, i, j) = MATRIX_ELEMENT(A, i, j);
+    /* Copy entries of A into result if they are different */
+    if (A != result) {
+        for (size_t i = 0; i < A->rows; i++) {
+            for (size_t j = 0; j < A->cols; j++) {
+                MATRIX_ELEMENT(result, i, j) = MATRIX_ELEMENT(A, i, j);
+            }
         }
     }
 
@@ -38,19 +41,23 @@ void row_echelon_form(const struct float_matrix* const A, struct float_matrix* r
             current_col++;
         }
 
+        /* First element of row i */
         pivot = MATRIX_ELEMENT(result, i, current_col);
         for (size_t j = 0; j < result->rows; j++) {
+            /* Skip row if its the same row as the pivot of if leading entry is 0 */
             if (j == i || MATRIX_ELEMENT(result, j, current_col) == 0) {
                 /* No work to do for this row */
                 continue;
             }
 
+            /* Subtract multi * row i from row j */
             multi = MATRIX_ELEMENT(result, j, current_col) / pivot;
             for (size_t k = current_col; k < result->cols; k++) {
                 MATRIX_ELEMENT(result, j, k) -= multi * MATRIX_ELEMENT(result, i, k);
             }
         }
 
+        /* We can always do this because we have just cleared a column to contain all 0's except one row */
         current_col++;
     }
 }

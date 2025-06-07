@@ -19,11 +19,8 @@
 
 #include "../theta_implementation.h"
 
-void test_row_echelon_form() {
-    struct float_matrix* A = (struct float_matrix*) safe_malloc(sizeof(struct float_matrix));
-    A->rows = 3;
-    A->cols = 3;
-    A->data = (THETA_FLOAT*) safe_malloc(A->rows * A->cols * sizeof(THETA_FLOAT));
+void row_echelon_form_test() {
+    struct float_matrix* A = make_float_matrix(3, 3);
 
     for (int i = 0; i < 3; i++) {
         for (int j = 0; j < 3; j++) {
@@ -31,10 +28,7 @@ void test_row_echelon_form() {
         }
     }
 
-    struct float_matrix* result = (struct float_matrix*) safe_malloc(sizeof(struct float_matrix));
-    result->rows = 3;
-    result->cols = 3;
-    result->data = (THETA_FLOAT*) safe_malloc(A->rows * A->cols * sizeof(THETA_FLOAT));
+    struct float_matrix* result = make_float_matrix(3, 3);
 
     row_echelon_form(A, result);
 

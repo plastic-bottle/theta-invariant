@@ -17,14 +17,15 @@
  *  with theta_invariant. If not, see <https://www.gnu.org/licenses/>.        *
  ******************************************************************************/
 
-#include "theta_implementation.h"
+ #include "theta_implementation.h"
 
-#include "tests/row_echelon_form_test.c"
-#include "tests/float_adjugate_test.c"
+struct float_matrix* make_float_matrix(const size_t rows, const size_t cols)
+{
+    struct float_matrix* result = (struct float_matrix*) safe_malloc(sizeof(struct float_matrix));
+    
+    result->rows = rows;
+    result->cols = cols;
+    result->data = (THETA_FLOAT*) safe_malloc(rows * cols * sizeof(THETA_FLOAT));
 
-/* Test */
-int main() {
-    float_adjugate_test();
-
-    return 0;
+    return result;
 }

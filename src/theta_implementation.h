@@ -82,17 +82,23 @@ struct float_matrix {
 	THETA_FLOAT* data;
 };
 
+/* Allocates memory for a float matrix */
+extern struct float_matrix* make_float_matrix(const size_t rows, const size_t cols);
+
 /* Puts float matrix A into REF and stores in result without scaling any rows to preserve determinant */
+/* A and result are allowed to point to the same memory */
 /* Assumes that A and result have the same dimensions */
-extern void row_echelon_form(const struct float_matrix* const A, struct float_matrix* result);
+extern void row_echelon_form(struct float_matrix* const A, struct float_matrix* const result);
 
 /* Returns the determinant of A, and populates matrix result with the entries of the adjugate of A */
+/* A and result are allowed to point to the same memory */
 /* Assumes that A and result have the same dimensions and are both square */
-extern THETA_FLOAT float_adjugate(const struct float_matrix* const A, struct float_matrix* result);
+extern THETA_FLOAT float_adjugate(struct float_matrix* const A, struct float_matrix* const result);
 
 /* Returns the adjugate of polynomial matrix A via Lagrange interpolation at consecutive integers starting from start_t */
+/* A and result are allowed to point to the same memory */
 /* Assumes that A and result have the same dimensions and are both square */
-extern void lagrange_polynomial_adjugate(const struct polynomial_matrix* const A, struct polynomial_matrix* result, const int start_t);
+extern void lagrange_polynomial_adjugate(struct polynomial_matrix* const A, struct polynomial_matrix* const result, const int start_t);
 
 
 

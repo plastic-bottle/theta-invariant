@@ -17,14 +17,34 @@
  *  with theta_invariant. If not, see <https://www.gnu.org/licenses/>.        *
  ******************************************************************************/
 
-#include "theta_implementation.h"
+#include "../theta_implementation.h"
 
-#include "tests/row_echelon_form_test.c"
-#include "tests/float_adjugate_test.c"
+void float_adjugate_test() {
+    struct float_matrix* A = make_float_matrix(3, 3);
 
-/* Test */
-int main() {
-    float_adjugate_test();
+    for (int i = 0; i < 3; i++) {
+        for (int j = 0; j < 3; j++) {
+            MATRIX_ELEMENT(A, i, j) = (i+2) * j - 1.0 + ((j == 2 && i == 2) ? 2.0 : 0.0);
+        }
+    }
 
-    return 0;
+    struct float_matrix* result = make_float_matrix(3, 3);
+
+    THETA_FLOAT determinant = float_adjugate(A, result);
+
+    for (int i = 0; i < 3; i++) {
+        for (int j = 0; j < 3; j++) {
+            printf("%f   ", MATRIX_ELEMENT(A, i, j));
+        }
+        printf("\n");
+    }
+
+    printf("\n%f\n\n", determinant);
+
+    for (int i = 0; i < 3; i++) {
+        for (int j = 0; j < 3; j++) {
+            printf("%f   ", MATRIX_ELEMENT(result, i, j));
+        }
+        printf("\n");
+    }
 }
