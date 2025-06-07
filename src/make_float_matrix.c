@@ -17,7 +17,7 @@
  *  with theta_invariant. If not, see <https://www.gnu.org/licenses/>.        *
  ******************************************************************************/
 
- #include "theta_implementation.h"
+#include "theta_implementation.h"
 
 struct float_matrix* make_float_matrix(const size_t rows, const size_t cols)
 {

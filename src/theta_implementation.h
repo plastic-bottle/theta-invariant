@@ -38,7 +38,7 @@ enum { YES, NO };
 
 /* Macro for floating point data type we are using */
 #define THETA_FLOAT __float128
-#define THETA_INT long
+#define THETA_INT long long
 
 
 /* Functions to safely use malloc, calloc, and free */
@@ -91,6 +91,9 @@ struct int_matrix {
 
 /* Allocates memory for a float matrix */
 extern struct float_matrix* make_float_matrix(const size_t rows, const size_t cols);
+
+/* Allocates memory for a int matrix */
+extern struct int_matrix* make_int_matrix(const size_t rows, const size_t cols);
 
 /* Puts float matrix A into REF and stores in result without scaling any rows to preserve determinant */
 /* A and result are allowed to point to the same memory */

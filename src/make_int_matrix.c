@@ -19,12 +19,14 @@
 
 #include "theta_implementation.h"
 
-#include "tests/row_echelon_form_test.c"
-#include "tests/int_adjugate_test.c"
+/* Allocates memory for a int matrix */
+struct int_matrix* make_int_matrix(const size_t rows, const size_t cols)
+{
+    struct int_matrix* result = (struct int_matrix*) safe_malloc(sizeof(struct int_matrix));
+    
+    result->rows = rows;
+    result->cols = cols;
+    result->data = (THETA_INT*) safe_malloc(rows * cols * sizeof(THETA_INT));
 
-/* Test */
-int main() {
-    int_adjugate_test();
-
-    return 0;
+    return result;
 }

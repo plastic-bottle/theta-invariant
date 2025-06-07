@@ -19,9 +19,9 @@
 
 #include "../theta_implementation.h"
 
-void float_adjugate_test() {
-    int n = 21; // odd
-    THETA_FLOAT t = (n - 1) / 2.0;
+void int_adjugate_test() {
+    int n = 19; // odd
+    THETA_FLOAT t = (n + 1) / 2.0;
     int N = 2 * n + 1;
 
     struct float_matrix* A = make_float_matrix(N, N);
@@ -46,35 +46,23 @@ void float_adjugate_test() {
         MATRIX_ELEMENT(A, i, i) += 1;
     }
 
-    struct float_matrix* result = make_float_matrix(N, N);
+    struct int_matrix* result = make_int_matrix(N, N);
 
-    THETA_FLOAT determinant = float_adjugate(A, result);
+    THETA_INT determinant = int_adjugate(A, result);
 
-    for (int i = 0; i < N; i++) {
+    /*for (int i = 0; i < N; i++) {
         for (int j = 0; j < N; j++) {
             printf("%f   ", (double) MATRIX_ELEMENT(A, i, j));
         }
         printf("\n");
-    }
+    }*/
 
-    printf("\n%f\n\n", (double) (determinant / ((__int128) 1 << 64)));
+    printf("\n%I64d\n\n", determinant);
 
-    THETA_FLOAT max_error = 0;
-    THETA_FLOAT error;
-
-    for (int i = 0; i < N; i++) {
+    /*for (int i = 0; i < N; i++) {
         for (int j = 0; j < N; j++) {
-            error = MATRIX_ELEMENT(result, i, j) - (__int128) MATRIX_ELEMENT(result, i, j);
-            if (error > 0.5) error -= 1;
-            if (error < -0.5) error += 1;
-            if (error < -1 * max_error) {
-                max_error = -1 * error;
-            }
-            if (error > max_error) {
-                max_error = error;
-            }
+            printf("%f\n", (double) MATRIX_ELEMENT(result, i, j));
         }
-    }
-
-    printf("%f", (double) max_error);
+        printf("\n");
+    }*/
 }
