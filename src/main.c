@@ -21,30 +21,7 @@
 
 /* Test */
 int main() {
-    struct float_matrix* A = (struct float_matrix*) safe_malloc(sizeof(struct float_matrix));
-    A->rows = 3;
-    A->cols = 3;
-    A->data = (THETA_FLOAT*) safe_malloc(A->rows * A->cols * sizeof(THETA_FLOAT));
-
-    for (int i = 0; i < 3; i++) {
-        for (int j = 0; j < 3; j++) {
-            MATRIX_ELEMENT(A, i, j) = (i+2) * j - 1.0;
-        }
-    }
-
-    struct float_matrix* result = (struct float_matrix*) safe_malloc(sizeof(struct float_matrix));
-    result->rows = 3;
-    result->cols = 3;
-    result->data = (THETA_FLOAT*) safe_malloc(A->rows * A->cols * sizeof(THETA_FLOAT));
-
-    row_echelon_form(A, result);
-
-    for (int i = 0; i < 3; i++) {
-        for (int j = 0; j < 3; j++) {
-            printf("%f   ", MATRIX_ELEMENT(A, i, j));
-        }
-        printf("\n");
-    }
+    
 
     return 0;
 }

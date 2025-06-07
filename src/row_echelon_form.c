@@ -24,29 +24,29 @@
 void row_echelon_form(const struct float_matrix* const A, struct float_matrix* result) 
 {
     // Copy entries of A into result
-    for (int i = 0; i < A->rows; i++) {
-        for (int j = 0; j < A->cols; j++) {
+    for (size_t i = 0; i < A->rows; i++) {
+        for (size_t j = 0; j < A->cols; j++) {
             MATRIX_ELEMENT(result, i, j) = MATRIX_ELEMENT(A, i, j);
         }
     }
 
-    int current_col = 0;
+    size_t current_col = 0;
     THETA_FLOAT pivot, multi;
-    for (int i = 0; i < result->rows; i++) {
+    for (size_t i = 0; i < result->rows; i++) {
         /* Advance current_col to the next nonzero entry in the row */
         while (MATRIX_ELEMENT(result, i, current_col) == 0) {
             current_col++;
         }
 
         pivot = MATRIX_ELEMENT(result, i, current_col);
-        for (int j = i+1; j < result->rows; j++) {
+        for (size_t j = i+1; j < result->rows; j++) {
             if (MATRIX_ELEMENT(result, j, current_col) == 0) {
                 /* No work to do for this row */
                 continue;
             }
 
             multi = MATRIX_ELEMENT(result, j, current_col) / pivot;
-            for (int k = current_col; k < result->cols; k++) {
+            for (size_t k = current_col; k < result->cols; k++) {
                 MATRIX_ELEMENT(result, j, k) -= multi * MATRIX_ELEMENT(result, i, k);
             }
         }
