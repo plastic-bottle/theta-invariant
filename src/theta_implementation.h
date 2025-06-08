@@ -101,8 +101,9 @@ extern struct int_matrix* make_int_matrix(const size_t rows, const size_t cols);
 extern void row_echelon_form(struct float_matrix* const A, struct float_matrix* const result);
 
 /* Returns the determinant of A, and populates matrix result with the entries of the adjugate of A */
+/* A and result are allowed to point to the same memory */
 /* Assumes that A and result have the same dimensions and are both square */
-extern THETA_INT int_adjugate(struct float_matrix* const A, struct int_matrix* const result);
+extern THETA_INT int_adjugate(struct int_matrix* const A, struct int_matrix* const result);
 
 /* Returns the adjugate of polynomial matrix A via Lagrange interpolation at consecutive integers starting from start_t */
 /* A and result are allowed to point to the same memory */

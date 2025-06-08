@@ -20,8 +20,9 @@
 #include "theta_implementation.h"
 
 /* Returns the determinant of A, and populates matrix result with the entries of the adjugate of A */
+/* A and result are allowed to point to the same memory */
 /* Assumes that A and result have the same dimensions and are both square */
-extern THETA_INT int_adjugate(struct float_matrix* const A, struct int_matrix* const result)
+THETA_INT int_adjugate(struct int_matrix* const A, struct int_matrix* const result)
 {
     size_t N = A->rows;
 
@@ -31,7 +32,7 @@ extern THETA_INT int_adjugate(struct float_matrix* const A, struct int_matrix* c
     /* Copy elements of A into augment to set it up */
     for (size_t i = 0; i < N; i++) {
         for (size_t j = 0; j < N; j++) {
-            MATRIX_ELEMENT(augment, i, j) = MATRIX_ELEMENT(A, i, j);
+            MATRIX_ELEMENT(augment, i, j) = (THETA_FLOAT) MATRIX_ELEMENT(A, i, j);
         }
     }
 
@@ -68,9 +69,7 @@ extern THETA_INT int_adjugate(struct float_matrix* const A, struct int_matrix* c
         }
     }
 
-
-
-    THETA_FLOAT max_error = 0;
+    /*THETA_FLOAT max_error = 0;
     THETA_FLOAT error;
 
     for (size_t i = 0; i < N; i++) {
@@ -86,7 +85,7 @@ extern THETA_INT int_adjugate(struct float_matrix* const A, struct int_matrix* c
             }
         }
     }
-    printf("Max fractional part error: %f\n\n", (double) max_error);
+    printf("Max fractional part error: %.10f\n\n", (double) max_error);*/
 
 
     /* Write adjugate to result */

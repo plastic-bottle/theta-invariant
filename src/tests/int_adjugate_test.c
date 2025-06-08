@@ -24,7 +24,7 @@ void int_adjugate_test() {
     THETA_FLOAT t = (n + 1) / 2.0;
     int N = 2 * n + 1;
 
-    struct float_matrix* A = make_float_matrix(N, N);
+    struct int_matrix* A = make_int_matrix(N, N);
 
     for (int i = 0; i < N; i++) {
         for (int j = 0; j < N; j++) {
