@@ -28,6 +28,8 @@
 
  /* The maximum allowable number of crossings a knot can have for the computation of the theta invariant */
 #define MAX_CROSSINGS (32)
+/* The maximum number of coefficients in any polynomial used to compute the theta invariant*/
+#define MAX_POLYNOMIAL_SIZE (2 * MAX_CROSSINGS + 1)
 
 /* Macros to find min and max of two numbers */
 #define MAX(a, b) ((a > b) ? a : b)
