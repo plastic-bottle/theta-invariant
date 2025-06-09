@@ -55,6 +55,21 @@ struct polynomial {
 	int* coeffs;
 };
 
+/* Struct for polynomial with floating-point coefficients */
+/* coeffs[n] stores the coefficient of x^n */
+struct double_polynomial {
+	size_t degree;
+	double* coeffs;
+};
+
+extern struct double_polynomial initialize_double_polynomial(void);
+extern struct double_polynomial make_double_polynomial(size_t degree, double* coeffs);
+extern struct double_polynomial add_double_polynomials(struct double_polynomial P, struct double_polynomial Q);
+extern struct double_polynomial multiply_double_polynomials(struct double_polynomial P, struct double_polynomial Q);
+extern void print_double_polynomial(struct double_polynomial P, char c);
+extern struct double_polynomial lagrange_interpolate(int max_degree, double* inputs, double* outputs);
+extern void adjust_degree(struct double_polynomial* P);
+
 /* Struct for laurent polynomial */
 /* Stores coefficients, highest degree, and lowest degree of polyonmial */
 struct laurent_polynomial {
@@ -62,8 +77,6 @@ struct laurent_polynomial {
 	signed int highest_degree;
 	signed int* coeffs;
 };
-
-
 
 /* Macro for accessing elements of a pointer to a matrix */
 #define MATRIX_ELEMENT(A, row, col) A->data[(size_t) (row) * A->cols + (size_t) (col)]
