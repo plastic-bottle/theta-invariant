@@ -95,6 +95,8 @@ extern struct float_matrix* make_float_matrix(const size_t rows, const size_t co
 /* Allocates memory for a int matrix */
 extern struct int_matrix* make_int_matrix(const size_t rows, const size_t cols);
 
+
+
 /* Puts float matrix A into REF and stores in result without scaling any rows to preserve determinant */
 /* A and result are allowed to point to the same memory */
 /* Assumes that A and result have the same dimensions */
