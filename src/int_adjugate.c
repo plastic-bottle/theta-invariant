@@ -69,7 +69,7 @@ THETA_INT int_adjugate(struct int_matrix* const A, struct int_matrix* const resu
         }
     }
 
-    /*THETA_FLOAT max_error = 0;
+    THETA_FLOAT max_error = 0;
     THETA_FLOAT error;
 
     for (size_t i = 0; i < N; i++) {
@@ -85,7 +85,7 @@ THETA_INT int_adjugate(struct int_matrix* const A, struct int_matrix* const resu
             }
         }
     }
-    printf("Max fractional part error: %.10f\n\n", (double) max_error);*/
+    printf("Max fractional part error: %.10f\n\n", (double) max_error);
 
 
     /* Write adjugate to result */

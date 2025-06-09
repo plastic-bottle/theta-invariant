@@ -20,7 +20,7 @@
 #include "../theta_implementation.h"
 
 void int_adjugate_test() {
-    int n = 19; // odd
+    int n = 11; // odd
     THETA_FLOAT t = (n + 1) / 2.0;
     int N = 2 * n + 1;
 
@@ -33,13 +33,13 @@ void int_adjugate_test() {
     }
     for (int i = 0; i < n; i++) {
         if (i % 2 == 0) {
-            MATRIX_ELEMENT(A, i, i+1) = -t;
-            MATRIX_ELEMENT(A, i, n+i+1) = t-1;
-            MATRIX_ELEMENT(A, n+i, n+i+1) = -1;
+            MATRIX_ELEMENT(A, i, i+1) = -t*t;
+            MATRIX_ELEMENT(A, i, n+i+1) = t*t-1*t;
+            MATRIX_ELEMENT(A, n+i, n+i+1) = -1*t;
         } else {
-            MATRIX_ELEMENT(A, n+i, n+i+1) = -t;
-            MATRIX_ELEMENT(A, n+i, i+1) = t-1;
-            MATRIX_ELEMENT(A, i, i+1) = -1;
+            MATRIX_ELEMENT(A, n+i, n+i+1) = -t*t;
+            MATRIX_ELEMENT(A, n+i, i+1) = t*t-1*t;
+            MATRIX_ELEMENT(A, i, i+1) = -1*t;
         }
     }
     for (int i = 0; i < N; i++) {
