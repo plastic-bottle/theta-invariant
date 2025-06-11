@@ -19,23 +19,17 @@
 
 #include "theta_implementation.h"
 
-/*Function which returns the unique polynomial of minimal degree passing through a set of points*/
-struct double_polynomial lagrange_interpolate(int max_degree, double* inputs, double* outputs) {
-    struct double_polynomial result = initialize_double_polynomial();
-    struct double_polynomial initial_lagrange_product = lagrange_product(max_degree, inputs);
-    for (int index = 0; index <= max_degree; index++) {
-        struct double_polynomial basis_polynomial = synthetic_division(initial_lagrange_product, inputs[index]);
-        double scale_factor = outputs[index];
-        for (int second_index = 0; second_index <= max_degree; second_index++) {
-            if (second_index == index)
-                continue;
-            scale_factor /= inputs[index] - inputs[second_index];
-        }
-        for (int second_index = 0; second_index <= basis_polynomial.degree; second_index++)
-            basis_polynomial.coeffs[second_index] *= scale_factor;
-        if (scale_factor == 0)
-            continue;
-        result = add_double_polynomials(result, basis_polynomial);
-    }
-    return result;
+/*Function which, when given the maximum degree n for a Lagrange interpolating polynomials and n + 1
+inputs for x, returns the product of all of the x - x_i*/
+struct double_polynomial lagrange_product(int max_degree, double* inputs) {
+	struct double_polynomial product;
+	product.degree = 0;
+	product.coeffs = (double*)safe_malloc(sizeof(double));
+	product.coeffs[0] = 1;
+	for (int index = 0; index <= max_degree; index++) {
+		double factor_coefficients[] = { -inputs[index], 1};
+		struct double_polynomial factor = make_double_polynomial(1, factor_coefficients);
+		product = multiply_double_polynomials(product, factor);
+	}
+	return product;
 }

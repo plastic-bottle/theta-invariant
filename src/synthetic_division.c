@@ -19,23 +19,16 @@
 
 #include "theta_implementation.h"
 
-/*Function which returns the unique polynomial of minimal degree passing through a set of points*/
-struct double_polynomial lagrange_interpolate(int max_degree, double* inputs, double* outputs) {
-    struct double_polynomial result = initialize_double_polynomial();
-    struct double_polynomial initial_lagrange_product = lagrange_product(max_degree, inputs);
-    for (int index = 0; index <= max_degree; index++) {
-        struct double_polynomial basis_polynomial = synthetic_division(initial_lagrange_product, inputs[index]);
-        double scale_factor = outputs[index];
-        for (int second_index = 0; second_index <= max_degree; second_index++) {
-            if (second_index == index)
-                continue;
-            scale_factor /= inputs[index] - inputs[second_index];
-        }
-        for (int second_index = 0; second_index <= basis_polynomial.degree; second_index++)
-            basis_polynomial.coeffs[second_index] *= scale_factor;
-        if (scale_factor == 0)
-            continue;
-        result = add_double_polynomials(result, basis_polynomial);
-    }
-    return result;
+/*Function which uses synthetic division to return the quotient when a polynomial P is divided by
+x - a*/
+struct double_polynomial synthetic_division(struct double_polynomial P, int a) {
+	struct double_polynomial quotient;
+	quotient.degree = P.degree - 1;
+	quotient.coeffs = (double*)safe_malloc(quotient.degree * sizeof(double));
+	double next_coefficient = P.coeffs[P.degree];
+	for (int index = P.degree - 1; index >= 0; index--) {
+		quotient.coeffs[index] = next_coefficient;
+		next_coefficient = next_coefficient * a + P.coeffs[index];
+	}
+	return quotient;
 }

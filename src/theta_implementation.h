@@ -69,6 +69,8 @@ extern struct double_polynomial make_double_polynomial(size_t degree, double* co
 extern struct double_polynomial add_double_polynomials(struct double_polynomial P, struct double_polynomial Q);
 extern struct double_polynomial multiply_double_polynomials(struct double_polynomial P, struct double_polynomial Q);
 extern void print_double_polynomial(struct double_polynomial P, char c);
+extern struct double_polynomial lagrange_product(int max_degree, double* inputs);
+extern struct double_polynomial synthetic_division(struct double_polynomial P, int a);
 extern struct double_polynomial lagrange_interpolate(int max_degree, double* inputs, double* outputs);
 extern void adjust_degree(struct double_polynomial* P);
 
