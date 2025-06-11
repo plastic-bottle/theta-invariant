@@ -21,7 +21,7 @@
 
 /*Function which uses synthetic division to return the quotient when a polynomial P is divided by
 x - a*/
-struct double_polynomial synthetic_division(struct double_polynomial P, int a) {
+struct double_polynomial synthetic_division(struct double_polynomial P, double a) {
 	struct double_polynomial quotient;
 	quotient.degree = P.degree - 1;
 	quotient.coeffs = (double*)safe_malloc(quotient.degree * sizeof(double));
