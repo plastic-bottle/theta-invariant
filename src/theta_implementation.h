@@ -38,6 +38,10 @@
 /* Symbolic constants for yes and no */
 enum { YES, NO };
 
+/* booleans */
+typedef int bool;
+enum { false, true };
+
 /* Macro for floating point data type we are using */
 #define THETA_FLOAT double
 #define THETA_INT long long
@@ -63,6 +67,8 @@ struct double_polynomial {
 	size_t degree;
 	double* coeffs;
 };
+
+extern struct polynomial initialize_polynomial(void);
 
 extern struct double_polynomial initialize_double_polynomial(void);
 extern struct double_polynomial make_double_polynomial(size_t degree, double* coeffs);
@@ -115,9 +121,14 @@ extern struct float_matrix* make_float_matrix(const size_t rows, const size_t co
 /* Allocates memory for a int matrix */
 extern struct int_matrix* make_int_matrix(const size_t rows, const size_t cols);
 
+
 /* Puts results in order_basis and s_col_degs */
 /* If the input and result arguments are identical, then old memory will be freed and new memory will be allocated */
-extern void right_order_basis(struct polynomial_matrix* const F, int order, int* cost s_array, struct polynomial_matrix* const order_basis, int* const s_col_degs)
+extern void right_order_basis(struct polynomial_matrix* const F, int order, int* const s_array, struct polynomial_matrix* const order_basis, int* const s_col_degs)
+
+/* Helper function for the minimal_nullspace_basis algorithm */
+/* We require A and B to satisfy the constraints of Theorem 3.7 in Zhou et al. (2012) */
+extern struct polynomial_matrix* mnb_fast_multiplication(struct polynomial_matrix* const A, struct polynomial_matrix* const B);
 
 #define ORDER_CONST 3
 
