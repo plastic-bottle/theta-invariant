@@ -115,6 +115,8 @@ struct int_matrix {
 
 /* Allocates memory for a polynomial matrix */
 extern struct polynomial_matrix* make_polynomial_matrix(const size_t rows, const size_t cols);
+/* Deallocates memory for a polynomial matrix */
+extern void delete_polynomial_matrix(struct polynomial_matrix* A);
 
 /* Allocates memory for a float matrix */
 extern struct float_matrix* make_float_matrix(const size_t rows, const size_t cols);
