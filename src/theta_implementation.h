@@ -39,7 +39,7 @@
 enum { YES, NO };
 
 /* Macro for floating point data type we are using */
-#define THETA_FLOAT __float128
+#define THETA_FLOAT double
 #define THETA_INT long long
 
 
