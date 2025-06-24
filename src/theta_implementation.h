@@ -106,12 +106,25 @@ struct int_matrix {
 	THETA_INT* data;
 };
 
+/* Allocates memory for a polynomial matrix */
+extern struct polynomial_matrix* make_polynomial_matrix(const size_t rows, const size_t cols);
+
 /* Allocates memory for a float matrix */
 extern struct float_matrix* make_float_matrix(const size_t rows, const size_t cols);
 
 /* Allocates memory for a int matrix */
 extern struct int_matrix* make_int_matrix(const size_t rows, const size_t cols);
 
+/* Puts results in order_basis and s_col_degs */
+/* If the input and result arguments are identical, then old memory will be freed and new memory will be allocated */
+extern void right_order_basis(struct polynomial_matrix* const F, int order, int* cost s_array, struct polynomial_matrix* const order_basis, int* const s_col_degs)
+
+#define ORDER_CONST 3
+
+/* Requires F to be s-reduced */
+/* Puts results in nullspace_basis and s_col_degs */
+/* If any input and result arguments are identical, then old memory will be freed and new memory will be allocated */
+extern void minimal_nullspace_basis(struct polynomial_matrix* const F, int* const s_array, struct polynomial_matrix* const nullspace_basis, int* const s_col_degs)
 
 
 /* Puts float matrix A into REF and stores in result without scaling any rows to preserve determinant */
@@ -146,8 +159,6 @@ struct knot {
 
 extern struct knot make_knot(const int number_of_crossings, struct crossing* const crossings);
 extern int* rotation_numbers(const struct knot* const K);
-
-
 
 /* Struct for linked list of integers; stores integer value and pointers to previous/next elements */
 struct linked_list {
