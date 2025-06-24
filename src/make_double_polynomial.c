@@ -23,7 +23,7 @@
 struct double_polynomial make_double_polynomial(size_t degree, double* coeffs) {
 	struct double_polynomial temp;
 	temp.degree = degree;
-	temp.coeffs = (int*)safe_malloc(MAX_POLYNOMIAL_SIZE * sizeof(double));
+	temp.coeffs = (double*)safe_malloc(MAX_POLYNOMIAL_SIZE * sizeof(double));
 	for (int index = 0; index <= degree; index++)
 		temp.coeffs[index] = coeffs[index];
 	return temp;

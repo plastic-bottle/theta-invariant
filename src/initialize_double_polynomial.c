@@ -23,7 +23,7 @@
  struct double_polynomial initialize_double_polynomial(void) {
 	struct double_polynomial temp;
 	temp.degree = 0;
-	temp.coeffs = (int*)safe_malloc(MAX_POLYNOMIAL_SIZE * sizeof(double));
+	temp.coeffs = (double*)safe_malloc(MAX_POLYNOMIAL_SIZE * sizeof(double));
 	temp.coeffs[0] = 0.0;
 	return temp;
 }
