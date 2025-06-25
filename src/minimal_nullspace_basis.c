@@ -57,21 +57,16 @@ void minimal_nullspace_basis(struct polynomial_matrix* F, int* s_array, struct p
         }
     }
 
-    /* Copy everything in P1 over to its own matrix */
-    /* This can be optimized out if need be, but you would need to be able to selectively free parts of P */
-    struct polynomial_matrix* P1 = make_polynomial_matrix(n, P1_cols);
-    for (int c = 0; c < P1->rows; c++) {
-        for (int r = 0 ; r < P1->cols; r++) {
-            MATRIX_ELEMENT(P1, r, c) = make_polynomial(MATRIX_ELEMENT(P, r, c).degree, MATRIX_ELEMENT(P, r, c).coeffs);
-        }
-    }
-
-    P1_s_col_degs = (int*) safe_malloc(P1_cols * sizeof(int));
-    for (int i = 0; i < P1_cols; i++) {
-        s_col_degs[i] = b_array[i];
-    }
-
     if (m == 1) {
+        /* Copy everything in P1 over to its own matrix */
+        /* This can be optimized out if need be, but you would need to be able to selectively free parts of P */
+        struct polynomial_matrix* P1 = make_polynomial_matrix(n, P1_cols);
+        for (int c = 0; c < P1->cols; c++) {
+            for (int r = 0 ; r < P1->rows; r++) {
+                MATRIX_ELEMENT(P1, r, c) = make_polynomial(MATRIX_ELEMENT(P, r, c).degree, MATRIX_ELEMENT(P, r, c).coeffs);
+            }
+        }
+
         /* Note that this also handles the case where F and nullspace_basis point to the same thing */
         if (nullspace_basis != NULL) {
             delete_polynomial_matrix(nullspace_basis);
@@ -84,7 +79,10 @@ void minimal_nullspace_basis(struct polynomial_matrix* F, int* s_array, struct p
 
         nullspace_basis = P1;
 
-        s_col_degs = P1_s_col_degs;
+        s_col_degs = (int*) safe_malloc(P1_cols * sizeof(int));
+        for (int i = 0; i < P1_cols; i++) {
+            s_col_degs[i] = b_array[i];
+        }
 
         delete_polynomial_matrix(P);
         delete_polynomial_matrix(FP);
@@ -99,12 +97,87 @@ void minimal_nullspace_basis(struct polynomial_matrix* F, int* s_array, struct p
         t_array[i] = b_array[i + P1_cols] - 3*s;
     }
 
-    /* Copy the portion of FP representing FP2 into an array called G while dividing by x^(3s) */
-    struct polynomial_matrix* G = make_polynomial_matrix(n, n - P1_cols);
-    for (int c = 0; c < G->rows; c++) {
-        for (int r = 0 ; r < G->cols; r++) {
-            
+    /* Copy the portion of FP representing FP2 into G1 and G2 while dividing by x^(3s) */
+    struct polynomial_matrix* G1 = make_polynomial_matrix((int) (m / 2), n - P1_cols);
+    struct polynomial_matrix* G2 = make_polynomial_matrix(m - G1->rows, n - P1_cols);
+    for (int c = 0; c < n - P1_cols; c++) {
+        for (int r = 0; r < G1->rows; r++) {
+            MATRIX_ELEMENT(G1, r, c) = initialize_polynomial();
+            MATRIX_ELEMENT(G1, r, c).degree = MATRIX_ELEMENT(FP, r, c + P1_cols).degree - 3*s;
+            for (int i = 0; i <= MATRIX_ELEMENT(G1, r, c).degree; i++) {
+                MATRIX_ELEMENT(G1, r, c).coeffs[i] = MATRIX_ELEMENT(FP, r, c + P1_cols).coeffs[i + 3*s];
+            }
+        }
+
+        for (int r = 0; r < G2->rows; r++) {
+            MATRIX_ELEMENT(G2, r, c) = initialize_polynomial();
+            MATRIX_ELEMENT(G2, r, c).degree = MATRIX_ELEMENT(FP, r + G1->rows, c + P1_cols).degree - 3*s;
+            for (int i = 0; i <= MATRIX_ELEMENT(G2, r, c).degree; i++) {
+                MATRIX_ELEMENT(G2, r, c).coeffs[i] = MATRIX_ELEMENT(FP, r + G1->rows, c + P1_cols).coeffs[i + 3*s];
+            }
         }
     }
+
+    struct polynomial_matrix* N1 = (void*) 0;
+    int* u_array = (void*) 0;
+    minimal_nullspace_basis(G1, t_array, N1, u_array);
+
+    struct polynomial_matrix* N2 = (void*) 0;
+    int* v_array = (void*) 0;
+    minimal_nullspace_basis(mnb_fast_multiplication(G2, N1), u_array, N2, v_array);
+
+    struct polynomial_matrix* Q = mnb_fast_multiplication(N1, N2);
+
+    /* Recall that P2 has n rows */
+    struct polynomial_matrix* P2Q = make_polynomial_matrix(n, Q->cols);
+    /* Write P2Q calculation using the method from page 370 -----------------------------------------------------------------------*/
+
+
+
+    /* Note that this also handles the case where F and nullspace_basis point to the same thing */
+    if (nullspace_basis != NULL) {
+        delete_polynomial_matrix(nullspace_basis);
+    }
+
+    /* Note that this also handles the case where s_array and s_col_degs point to the same thing */
+    if (s_col_degs != NULL) {
+        safe_free(s_col_degs);
+    }
+
+    nullspace_basis = make_polynomial_matrix(n, P1_cols + P2Q->cols);
+    for (int r = 0; r < nullspace_basis->rows; r++) {
+        /* Copy elements from P1 over */
+        for (int c = 0; c < P1_cols; c++) {
+            MATRIX_ELEMENT(nullspace_basis, r, c) = make_polynomial(MATRIX_ELEMENT(P, r, c).degree, MATRIX_ELEMENT(P, r, c).coeffs);
+        }
+        
+        /* Copy elements from P2Q over */
+        for (int c = 0; c < P2Q->cols; c++) {
+            MATRIX_ELEMENT(nullspace_basis, r, c + P1_cols) = make_polynomial(MATRIX_ELEMENT(P2Q, r, c).degree, MATRIX_ELEMENT(P2Q, r, c).coeffs);
+        }
+    }
+
+    s_col_degs = (int*) safe_malloc((P1_cols + P2Q->cols) * sizeof(int));
+    for (int i = 0; i < P1_cols; i++) {
+        s_col_degs[i] = b_array[i];
+    }
+    for (int i = 0; i < P2Q->cols; i++) {
+        /* Fix - is line 13 in the pseudocode wrong? ---------------------------------------------------------------------*/
+        //s_col_degs[i + P1_cols] = ;
+    }
+
+    delete_polynomial_matrix(P);
+    delete_polynomial_matrix(FP);
+    delete_polynomial_matrix(G1);
+    delete_polynomial_matrix(G2);
+    delete_polynomial_matrix(N1);
+    delete_polynomial_matrix(N2);
+    delete_polynomial_matrix(P2Q);
+    safe_free(b_array);
+    safe_free(t_array);
+    safe_free(u_array);
+    safe_free(v_array);
+
+    return;
 
 }
