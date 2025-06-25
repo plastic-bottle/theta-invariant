@@ -22,7 +22,7 @@
 /* Requires F to be s-reduced */
 /* Puts results in nullspace_basis and s_col_degs */
 /* If any input and result arguments are identical, then old memory will be freed and new memory will be allocated */
-void minimal_nullspace_basis(struct polynomial_matrix* F, int* s_array, struct polynomial_matrix* nullspace_basis, int* s_col_degs)
+void shifted_minimal_nullspace_basis(struct polynomial_matrix* F, int* s_array, struct polynomial_matrix* nullspace_basis, int* s_col_degs)
 {
     int m = F->rows;
     int n = F->cols;
@@ -120,18 +120,18 @@ void minimal_nullspace_basis(struct polynomial_matrix* F, int* s_array, struct p
 
     struct polynomial_matrix* N1 = (void*) 0;
     int* u_array = (void*) 0;
-    minimal_nullspace_basis(G1, t_array, N1, u_array);
+    shifted_minimal_nullspace_basis(G1, t_array, N1, u_array);
 
     struct polynomial_matrix* N2 = (void*) 0;
     int* v_array = (void*) 0;
-    minimal_nullspace_basis(mnb_fast_multiplication(G2, N1), u_array, N2, v_array);
+    shifted_minimal_nullspace_basis(mnb_fast_multiplication(G2, N1), u_array, N2, v_array);
 
     struct polynomial_matrix* Q = mnb_fast_multiplication(N1, N2);
 
     /* Recall that P2 has n rows */
     struct polynomial_matrix* P2Q = make_polynomial_matrix(n, Q->cols);
     /* Write P2Q calculation using the method from page 370 -----------------------------------------------------------------------*/
-
+    
 
 
     /* Note that this also handles the case where F and nullspace_basis point to the same thing */
@@ -162,8 +162,8 @@ void minimal_nullspace_basis(struct polynomial_matrix* F, int* s_array, struct p
         s_col_degs[i] = b_array[i];
     }
     for (int i = 0; i < P2Q->cols; i++) {
-        /* Fix - is line 13 in the pseudocode wrong? ---------------------------------------------------------------------*/
-        //s_col_degs[i + P1_cols] = ;
+        /* I think that we need to shift v back by ORDER_CONST*c */
+        s_col_degs[i + P1_cols] = v_array[i] + ORDER_CONST*c;
     }
 
     delete_polynomial_matrix(P);
