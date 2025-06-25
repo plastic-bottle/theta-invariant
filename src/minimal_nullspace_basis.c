@@ -19,25 +19,22 @@
 
 #include "theta_implementation.h"
 
-/* Requires F to be s-reduced */
-/* Puts results in nullspace_basis and s_col_degs */
-/* If any input and result arguments are identical, then old memory will be freed and new memory will be allocated */
-void shifted_minimal_nullspace_basis(struct polynomial_matrix* F, int* s_array, struct polynomial_matrix* nullspace_basis, int* s_col_degs)
+void minimal_nullspace_basis(struct polynomial_matrix* F, struct polynomial_matrix* nullspace_basis)
 {
     int m = F->rows;
     int n = F->cols;
     
     /* We will instead use an upper bound for s by finding the largest element */
     int s = 0;
-    for (int i = 0; i < n; i++) {
-        if (s_array[i] > s) s = s_array[i];
+    for (int r = 0; r < F->rows; r++) {
+        for (int c = 0; c < F->cols; c++) {
+            if (MATRIX_ELEMENT(F, r, c).degree > s) s = MATRIX_ELEMENT(F, r, c).degree;
+        }
     }
 
     struct polynomial_matrix* P = (void*) 0;
-    /* s-column degrees of P */
-    int* b_array = (int*) safe_malloc(n * sizeof(int));
 
-    right_order_basis(F, ORDER_CONST*s, s_array, P, b_array);
+    right_order_basis(F, ORDER_CONST*s, P);
 
     /* Product of F and P */
     struct polynomial_matrix* FP = (void*) 0;
@@ -72,29 +69,12 @@ void shifted_minimal_nullspace_basis(struct polynomial_matrix* F, int* s_array, 
             delete_polynomial_matrix(nullspace_basis);
         }
 
-        /* Note that this also handles the case where s_array and s_col_degs point to the same thing */
-        if (s_col_degs != NULL) {
-            safe_free(s_col_degs);
-        }
-
         nullspace_basis = P1;
-
-        s_col_degs = (int*) safe_malloc(P1_cols * sizeof(int));
-        for (int i = 0; i < P1_cols; i++) {
-            s_col_degs[i] = b_array[i];
-        }
 
         delete_polynomial_matrix(P);
         delete_polynomial_matrix(FP);
-        safe_free(b_array);
 
         return;
-    }
-
-    /* t_array contains the downshifted s-column degrees of P2 */
-    int* t_array = (int*) safe_malloc((n - P1_cols) * sizeof(int));
-    for (int i = 0; i < (n - P1_cols); i++) {
-        t_array[i] = b_array[i + P1_cols] - ORDER_CONST*s;
     }
 
     /* Copy the portion of FP representing FP2 into G1 and G2 while dividing by x^(ORDER_CONST*s) */
@@ -119,12 +99,10 @@ void shifted_minimal_nullspace_basis(struct polynomial_matrix* F, int* s_array, 
     }
 
     struct polynomial_matrix* N1 = (void*) 0;
-    int* u_array = (void*) 0;
-    shifted_minimal_nullspace_basis(G1, t_array, N1, u_array);
+    minimal_nullspace_basis(G1, N1);
 
     struct polynomial_matrix* N2 = (void*) 0;
-    int* v_array = (void*) 0;
-    shifted_minimal_nullspace_basis(mnb_fast_multiplication(G2, N1), u_array, N2, v_array);
+    minimal_nullspace_basis(mnb_fast_multiplication(G2, N1), N2);
 
     struct polynomial_matrix* Q = mnb_fast_multiplication(N1, N2);
 
@@ -137,11 +115,6 @@ void shifted_minimal_nullspace_basis(struct polynomial_matrix* F, int* s_array, 
     /* Note that this also handles the case where F and nullspace_basis point to the same thing */
     if (nullspace_basis != NULL) {
         delete_polynomial_matrix(nullspace_basis);
-    }
-
-    /* Note that this also handles the case where s_array and s_col_degs point to the same thing */
-    if (s_col_degs != NULL) {
-        safe_free(s_col_degs);
     }
 
     nullspace_basis = make_polynomial_matrix(n, P1_cols + P2Q->cols);
@@ -157,15 +130,6 @@ void shifted_minimal_nullspace_basis(struct polynomial_matrix* F, int* s_array, 
         }
     }
 
-    s_col_degs = (int*) safe_malloc((P1_cols + P2Q->cols) * sizeof(int));
-    for (int i = 0; i < P1_cols; i++) {
-        s_col_degs[i] = b_array[i];
-    }
-    for (int i = 0; i < P2Q->cols; i++) {
-        /* I think that we need to shift v back by ORDER_CONST*c */
-        s_col_degs[i + P1_cols] = v_array[i] + ORDER_CONST*c;
-    }
-
     delete_polynomial_matrix(P);
     delete_polynomial_matrix(FP);
     delete_polynomial_matrix(G1);
@@ -173,11 +137,6 @@ void shifted_minimal_nullspace_basis(struct polynomial_matrix* F, int* s_array, 
     delete_polynomial_matrix(N1);
     delete_polynomial_matrix(N2);
     delete_polynomial_matrix(P2Q);
-    safe_free(b_array);
-    safe_free(t_array);
-    safe_free(u_array);
-    safe_free(v_array);
 
     return;
-
 }
