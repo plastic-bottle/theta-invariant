@@ -39,8 +39,7 @@
 enum { YES, NO };
 
 /* booleans */
-typedef int bool;
-enum { false, true };
+enum boolean { FALSE, TRUE };
 
 /* Macro for floating point data type we are using */
 #define THETA_FLOAT double

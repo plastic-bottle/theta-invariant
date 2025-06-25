@@ -45,14 +45,14 @@ void minimal_nullspace_basis(struct polynomial_matrix* F, int* s_array, struct p
 
     /* Assuming that all of P1 will come at the left of P - should verify this assumption later */
     int P1_cols = 0;
-    bool end_loop = false;
+    enum boolean end_loop = FALSE;
     /* The number of cols in P1 is bounded by the number of cols in the nullspace basis, which is in turn bounded by the number of rows in F */
-    for (int c = 0; c < m && end_loop == false; c++) {
-        for (int r = 0; r < m && end_loop == false; r++) {
-            if (MATRIX_ELEMENT(FP, r, c).degree != 0 || MATRIX_ELEMENT(FP, r, c).coeffs[0] != 0) end_loop = true;
+    for (int c = 0; c < m && end_loop == FALSE; c++) {
+        for (int r = 0; r < m && end_loop == FALSE; r++) {
+            if (MATRIX_ELEMENT(FP, r, c).degree != 0 || MATRIX_ELEMENT(FP, r, c).coeffs[0] != 0) end_loop = TRUE;
         }
         
-        if (end_loop == false) {
+        if (end_loop == FALSE) {
             P1_cols++;
         }
     }
