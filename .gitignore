@@ -45,6 +45,9 @@
 # vscode stuff
 *.json
 
+# build folder
+build/
+
 # Kernel Module Compile Results
 *.mod*
 *.cmd
