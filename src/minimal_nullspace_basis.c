@@ -37,7 +37,7 @@ void minimal_nullspace_basis(struct polynomial_matrix* F, int* s_array, struct p
     /* s-column degrees of P */
     int* b_array = (int*) safe_malloc(n * sizeof(int));
 
-    right_order_basis(F, 3*s, s_array, P, b_array);
+    right_order_basis(F, ORDER_CONST*s, s_array, P, b_array);
 
     /* Product of F and P */
     struct polynomial_matrix* FP = make_polynomial_matrix(m, n);
@@ -94,26 +94,26 @@ void minimal_nullspace_basis(struct polynomial_matrix* F, int* s_array, struct p
     /* t_array contains the downshifted s-column degrees of P2 */
     int* t_array = (int*) safe_malloc((n - P1_cols) * sizeof(int));
     for (int i = 0; i < (n - P1_cols); i++) {
-        t_array[i] = b_array[i + P1_cols] - 3*s;
+        t_array[i] = b_array[i + P1_cols] - ORDER_CONST*s;
     }
 
-    /* Copy the portion of FP representing FP2 into G1 and G2 while dividing by x^(3s) */
+    /* Copy the portion of FP representing FP2 into G1 and G2 while dividing by x^(ORDER_CONST*s) */
     struct polynomial_matrix* G1 = make_polynomial_matrix((int) (m / 2), n - P1_cols);
     struct polynomial_matrix* G2 = make_polynomial_matrix(m - G1->rows, n - P1_cols);
     for (int c = 0; c < n - P1_cols; c++) {
         for (int r = 0; r < G1->rows; r++) {
             MATRIX_ELEMENT(G1, r, c) = initialize_polynomial();
-            MATRIX_ELEMENT(G1, r, c).degree = MATRIX_ELEMENT(FP, r, c + P1_cols).degree - 3*s;
+            MATRIX_ELEMENT(G1, r, c).degree = MATRIX_ELEMENT(FP, r, c + P1_cols).degree - ORDER_CONST*s;
             for (int i = 0; i <= MATRIX_ELEMENT(G1, r, c).degree; i++) {
-                MATRIX_ELEMENT(G1, r, c).coeffs[i] = MATRIX_ELEMENT(FP, r, c + P1_cols).coeffs[i + 3*s];
+                MATRIX_ELEMENT(G1, r, c).coeffs[i] = MATRIX_ELEMENT(FP, r, c + P1_cols).coeffs[i + ORDER_CONST*s];
             }
         }
 
         for (int r = 0; r < G2->rows; r++) {
             MATRIX_ELEMENT(G2, r, c) = initialize_polynomial();
-            MATRIX_ELEMENT(G2, r, c).degree = MATRIX_ELEMENT(FP, r + G1->rows, c + P1_cols).degree - 3*s;
+            MATRIX_ELEMENT(G2, r, c).degree = MATRIX_ELEMENT(FP, r + G1->rows, c + P1_cols).degree - ORDER_CONST*s;
             for (int i = 0; i <= MATRIX_ELEMENT(G2, r, c).degree; i++) {
-                MATRIX_ELEMENT(G2, r, c).coeffs[i] = MATRIX_ELEMENT(FP, r + G1->rows, c + P1_cols).coeffs[i + 3*s];
+                MATRIX_ELEMENT(G2, r, c).coeffs[i] = MATRIX_ELEMENT(FP, r + G1->rows, c + P1_cols).coeffs[i + ORDER_CONST*s];
             }
         }
     }
