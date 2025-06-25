@@ -68,7 +68,7 @@ struct double_polynomial {
 };
 
 extern struct polynomial initialize_polynomial(void);
-extern struct polynomial make_polynomial(size_t degree, int* coeffs)
+extern struct polynomial make_polynomial(size_t degree, int* coeffs);
 
 extern struct double_polynomial initialize_double_polynomial(void);
 extern struct double_polynomial make_double_polynomial(size_t degree, double* coeffs);
@@ -126,7 +126,7 @@ extern struct int_matrix* make_int_matrix(const size_t rows, const size_t cols);
 
 /* Puts results in order_basis and s_col_degs */
 /* If the input and result arguments are identical, then old memory will be freed and new memory will be allocated */
-extern void right_order_basis(struct polynomial_matrix* F, int order, int* s_array, struct polynomial_matrix* order_basis, int* s_col_degs)
+extern void right_order_basis(struct polynomial_matrix* F, int order, int* s_array, struct polynomial_matrix* order_basis, int* s_col_degs);
 
 /* Helper function for the minimal_nullspace_basis algorithm */
 /* We require A and B to satisfy the constraints of Theorem 3.7 in Zhou et al. (2012) */
@@ -137,7 +137,7 @@ extern struct polynomial_matrix* mnb_fast_multiplication(struct polynomial_matri
 /* Requires F to be s-reduced */
 /* Puts results in nullspace_basis and s_col_degs */
 /* If any input and result arguments are identical, then old memory will be freed and new memory will be allocated */
-extern void minimal_nullspace_basis(struct polynomial_matrix* F, int* s_array, struct polynomial_matrix* nullspace_basis, int* s_col_degs)
+extern void minimal_nullspace_basis(struct polynomial_matrix* F, int* s_array, struct polynomial_matrix* nullspace_basis, int* s_col_degs);
 
 
 /* Puts float matrix A into REF and stores in result without scaling any rows to preserve determinant */
