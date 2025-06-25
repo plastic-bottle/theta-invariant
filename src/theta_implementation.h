@@ -132,12 +132,6 @@ extern void right_order_basis(struct polynomial_matrix* F, int order, struct pol
 /* If the input and result arguments are identical, then old memory will be freed and new memory will be allocated */
 extern void shifted_right_order_basis(struct polynomial_matrix* F, int order, int* s_array, struct polynomial_matrix* order_basis, int* s_col_degs);
 
-
-// DO WE REPLACE WITH NAIVE -------------------------------------------------------------------------------------------------------------------------------------
-/* Helper function for the minimal_nullspace_basis algorithm */
-/* We require A and B to satisfy the constraints of Theorem 3.7 in Zhou et al. (2012) */
-extern struct polynomial_matrix* mnb_fast_multiplication(const struct polynomial_matrix* const A, const struct polynomial_matrix* const B);
-
 #define ORDER_CONST 3
 
 /* Puts results in nullspace_basis */
