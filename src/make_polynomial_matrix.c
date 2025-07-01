@@ -20,13 +20,13 @@
 #include "theta_implementation.h"
 
 /* Allocates memory for a polynomial matrix */
-extern struct polynomial_matrix* make_polynomial_matrix(const size_t rows, const size_t cols)
+struct polynomial_matrix* make_polynomial_matrix(const size_t rows, const size_t cols)
 {
     struct polynomial_matrix* result = (struct polynomial_matrix*) safe_malloc(sizeof(struct polynomial_matrix));
     
     result->rows = rows;
     result->cols = cols;
-    result->data = (struct polynomial_matrix*) safe_malloc(rows * cols * sizeof(struct polynomial_matrix));
+    result->data = (struct polynomial*) safe_malloc(rows * cols * sizeof(struct polynomial));
 
     return result;
 }
