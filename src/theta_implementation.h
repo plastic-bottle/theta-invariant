@@ -129,6 +129,10 @@ extern void delete_polynomial_matrix(struct polynomial_matrix* A);
 extern struct polynomial_split_matrix* make_polynomial_split_matrix(const size_t rows, const size_t cols);
 /* Deallocates memory for a polynomial split matrix */
 extern void delete_polynomial_split_matrix(struct polynomial_split_matrix* A);
+/* Creates a new polynomial split matrix struct that is a block of the argument */
+/* row_start and col_start are zero indexed */
+/* The returned matrix WILL SHARE THE SAME MEMORY as the argument */
+extern struct polynomial_split_matrix* block_polynomial_split_matrix(struct polynomial_split_matrix* A, const size_t row_start, const size_t col_start, const size_t rows, const size_t cols);
 
 /* Allocates memory for a float matrix */
 extern struct float_matrix* make_float_matrix(const size_t rows, const size_t cols);
