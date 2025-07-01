@@ -98,6 +98,14 @@ struct polynomial_matrix {
 	struct polynomial* data;
 };
 
+/* Matrix of polynomial structs using row major ordering */
+/* This greatly simplifies the process of taking blocks of a matrix */
+struct polynomial_split_matrix {
+	size_t rows;
+	size_t cols;
+	struct polynomial** data;
+}
+
 /* Matrix of floats */
 struct float_matrix {
 	size_t rows;
@@ -116,6 +124,11 @@ struct int_matrix {
 extern struct polynomial_matrix* make_polynomial_matrix(const size_t rows, const size_t cols);
 /* Deallocates memory for a polynomial matrix */
 extern void delete_polynomial_matrix(struct polynomial_matrix* A);
+
+/* Allocates memory for a polynomial split matrix */
+extern struct polynomial_split_matrix* make_polynomial_split_matrix(const size_t rows, const size_t cols);
+/* Deallocates memory for a polynomial split matrix */
+extern void delete_polynomial_split_matrix(struct polynomial_split_matrix* A);
 
 /* Allocates memory for a float matrix */
 extern struct float_matrix* make_float_matrix(const size_t rows, const size_t cols);
