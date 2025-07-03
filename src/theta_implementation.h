@@ -160,6 +160,16 @@ extern void minimal_nullspace_basis(struct polynomial_matrix* F, struct polynomi
 /* If any input and result arguments are identical, then old memory will be freed and new memory will be allocated */
 extern void shifted_minimal_nullspace_basis(struct polynomial_matrix* F, int* s_array, struct polynomial_matrix* nullspace_basis, int* s_col_degs);
 
+/* Uses the inversion algorithm proposed in Zhou, Labahn, and Storhojann (2014) */
+/* Inverts F, puts inverse in inverse and common denominator (which is guaranteed to be a factor of the determinant) in denominator */
+/* If any input and result arguments are identical, then old memory will be freed and new memory will be allocated */
+extern void polynomial_matrix_inverse(struct polynomial_matrix* F, struct polynomial_matrix* inverse, struct polynomial* denominator);
+
+/* Helper function for polynomial_matrix_inverse */
+/* DO NOT CALL THIS OUTSIDE OF polynomial_matrix_inverse */
+/* F is the input matrix to invert, A is the pointer to the particular A_k that this function call is concerned with, B is the resulting diagonal matrix */
+extern void polynomial_matrix_inverse_recurser(struct polynomial_split_matrix* const F, int* s_array, struct polynomial_split_matrix* const A, struct polynomial_split_matrix* const B);
+
 
 /* Puts float matrix A into REF and stores in result without scaling any rows to preserve determinant */
 /* A and result are allowed to point to the same memory */
