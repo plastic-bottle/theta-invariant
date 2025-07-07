@@ -159,7 +159,7 @@ extern void polynomial_matrix_inverse(struct polynomial_matrix* F, struct polyno
 /* Helper function for polynomial_matrix_inverse */
 /* DO NOT CALL THIS OUTSIDE OF polynomial_matrix_inverse */
 /* F is the input matrix to invert, A is the pointer to the particular A_k that this function call is concerned with, B is the resulting diagonal matrix */
-/* This function will handle freeing the memory in F if needed */
+/* This function will handle freeing the memory in F and s_array if needed */
 extern void polynomial_matrix_inverse_recurser(struct polynomial_pointer_matrix* const F, int* s_array, struct polynomial_pointer_matrix* const A, int a_start, struct polynomial** const B);
 
 

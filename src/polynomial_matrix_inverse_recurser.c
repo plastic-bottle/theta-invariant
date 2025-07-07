@@ -22,7 +22,7 @@
 /* Helper function for polynomial_matrix_inverse */
 /* DO NOT CALL THIS OUTSIDE OF polynomial_matrix_inverse */
 /* F is the input matrix to invert, A is the pointer to the particular A_k that this function call is concerned with, B is the resulting diagonal matrix */
-/* This function will handle freeing the memory in F if needed */
+/* This function will handle freeing the memory in F and s_array if needed */
 void polynomial_matrix_inverse_recurser(struct polynomial_matrix* const F, int* s_array, struct polynomial_pointer_matrix* const A, int a_start, struct polynomial** const B)
 {
     /* */
@@ -31,8 +31,11 @@ void polynomial_matrix_inverse_recurser(struct polynomial_matrix* const F, int* 
 
     if (F->rows == 1) {
         /* The element in B will point to the same memory as the first row pointer in F->data (which points to the first element of the first row ) */
-        /* Don't free F since we will use that memory in B */
-        B[0] = F->data[0];
+        /* Don't free F->data since we will use that memory in B */
+        B[0] = F->data;
+
+        free(F);
+        safe_free(s_array);
 
         return;
     }
