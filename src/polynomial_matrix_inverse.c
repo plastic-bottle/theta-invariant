@@ -19,7 +19,7 @@
 
 #include "theta_implementation.h"
 
-/* Uses the inversion algorithm proposed in Zhou, Labahn, and Storhojann (2014) */
+/* Uses the inversion algorithm proposed in Zhou, Labahn, and Storjohann (2014) */
 /* Inverts F, puts inverse in inverse and common denominator (which is guaranteed to be a factor of the determinant) in denominator */
 /* If any input and result arguments are identical, then old memory will be freed and new memory will be allocated */
 void polynomial_matrix_inverse(struct polynomial_matrix* F, struct polynomial_matrix* inverse, struct polynomial* denominator)
