@@ -78,7 +78,23 @@ void polynomial_matrix_inverse_recurser(struct polynomial_matrix* const F, int* 
         }
     }
 
+    /* Free F and stuff attached to it */
+    delete_polynomial_matrix(F);
+    safe_free(F_u->data);
+    safe_free(F_d->data);
+    safe_free(F_u);
+    safe_free(F_d);
+
+    /* Free s_array */
+    safe_free(s_array);
+
+    /* Free pointers to N_r and N_l but not their contents */
+    safe_free(N_r);
+    safe_free(N_l);
+
     polynomial_matrix_inverse_recurser(R_u, N_l_cdegs, A+1, a_start, B);
     polynomial_matrix_inverse_recurser(R_d, N_r_cdegs, A+1, a_start+chop, B+chop);
+    
+    /* No need to free the N_l and N_r cdegs because the function call itself frees it */
 
 }
