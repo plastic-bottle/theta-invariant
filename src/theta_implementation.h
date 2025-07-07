@@ -98,9 +98,8 @@ struct polynomial_matrix {
 	struct polynomial* data;
 };
 
-/* Matrix of polynomial structs using row major ordering */
-/* This greatly simplifies the process of taking blocks of a matrix */
-struct polynomial_split_matrix {
+/* Matrix of pointers to polynomials */
+struct polynomial_pointer_matrix {
 	size_t rows;
 	size_t cols;
 	struct polynomial** data;
@@ -125,14 +124,10 @@ extern struct polynomial_matrix* make_polynomial_matrix(const size_t rows, const
 /* Deallocates memory for a polynomial matrix */
 extern void delete_polynomial_matrix(struct polynomial_matrix* A);
 
-/* Allocates memory for a polynomial split matrix */
-extern struct polynomial_split_matrix* make_polynomial_split_matrix(const size_t rows, const size_t cols);
-/* Deallocates memory for a polynomial split matrix */
-extern void delete_polynomial_split_matrix(struct polynomial_split_matrix* A);
-/* Creates a new polynomial split matrix struct that is a block of the argument */
-/* row_start and col_start are zero indexed */
-/* The returned matrix WILL SHARE THE SAME MEMORY as the argument */
-extern struct polynomial_split_matrix* block_polynomial_split_matrix(struct polynomial_split_matrix* A, const size_t row_start, const size_t col_start, const size_t rows, const size_t cols);
+/* Allocates memory for a polynomial pointer matrix */
+extern struct polynomial_pointer_matrix* make_polynomial_pointer_matrix(const size_t rows, const size_t cols);
+/* Deallocates memory for a polynomial pointer matrix */
+extern void delete_polynomial_pointer_matrix(struct polynomial_pointer_matrix* A);
 
 /* Allocates memory for a float matrix */
 extern struct float_matrix* make_float_matrix(const size_t rows, const size_t cols);
@@ -151,10 +146,6 @@ extern void shifted_right_order_basis(struct polynomial_matrix* F, int order, in
 
 #define ORDER_CONST 3
 
-/* Puts results in nullspace_basis */
-/* If any input and result arguments are identical, then old memory will be freed and new memory will be allocated */
-extern void minimal_nullspace_basis(struct polynomial_matrix* F, struct polynomial_matrix* nullspace_basis);
-
 /* Requires F to be s-reduced */
 /* Puts results in nullspace_basis and s_col_degs */
 /* If any input and result arguments are identical, then old memory will be freed and new memory will be allocated */
@@ -169,7 +160,7 @@ extern void polynomial_matrix_inverse(struct polynomial_matrix* F, struct polyno
 /* DO NOT CALL THIS OUTSIDE OF polynomial_matrix_inverse */
 /* F is the input matrix to invert, A is the pointer to the particular A_k that this function call is concerned with, B is the resulting diagonal matrix */
 /* This function will handle freeing the memory in F if needed */
-extern void polynomial_matrix_inverse_recurser(struct polynomial_split_matrix* const F, int* s_array, struct polynomial_split_matrix* const A, struct polynomial** const B);
+extern void polynomial_matrix_inverse_recurser(struct polynomial_pointer_matrix* const F, int* s_array, struct polynomial_pointer_matrix* const A, int a_start, struct polynomial** const B);
 
 
 /* Puts float matrix A into REF and stores in result without scaling any rows to preserve determinant */

@@ -19,16 +19,18 @@
 
 #include "theta_implementation.h"
 
-/* Deallocates memory for a polynomial split matrix */
-void delete_polynomial_split_matrix(struct polynomial_split_matrix* A)
+/* Allocates memory for a polynomial pointer matrix */
+struct polynomial_pointer_matrix* make_polynomial_pointer_matrix(const size_t rows, const size_t cols)
 {
-    for (int i = 0; i < A->rows; i++) {
-        for (int j = 0; j < A->cols; j++) {
-            safe_free(A->data[i][j].coeffs);
-        }
-        safe_free(A->data[i]);
+    struct polynomial_pointer_matrix* result = (struct polynomial_pointer_matrix*) safe_malloc(sizeof(struct polynomial_pointer_matrix));
+    
+    result->rows = rows;
+    result->cols = cols;
+
+    result->data = (struct polynomial**) safe_malloc(rows * cols * sizeof(struct polynomial*));
+    for (int i = 0; i < result->rows * result->cols; i++) {
+        result->data[i] = (struct polynomial*) safe_malloc(sizeof(struct polynomial));
     }
 
-    safe_free(A->data);
-    safe_free(A);
+    return result;
 }
