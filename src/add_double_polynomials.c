@@ -23,7 +23,7 @@
 struct double_polynomial add_double_polynomials(struct double_polynomial P, struct double_polynomial Q) {
 	struct double_polynomial sum;
 	sum.degree = MAX(P.degree, Q.degree);
-	sum.coeffs = (int*)safe_malloc(MAX_POLYNOMIAL_SIZE * sizeof(double));
+	sum.coeffs = (double*)safe_malloc(MAX_POLYNOMIAL_SIZE * sizeof(double));
     /*Each of the coefficients of the sum is set to the sum of the corresponding coefficients from P and Q*/
 	for (int index = 0; index <= sum.degree; index++) {
 		sum.coeffs[index] = 0;
