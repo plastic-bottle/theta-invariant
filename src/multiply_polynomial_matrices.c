@@ -19,19 +19,27 @@
 
 #include "theta_implementation.h"
 
-struct polynomial multiply_polynomials(struct polynomial P, struct polynomial Q) 
+struct polynomial_matrix* multiply_polynomial_matrices(struct polynomial_matrix* A, struct polynomial_matrix* B)
 {
-    struct polynomial product;
-	product.degree = P.degree + Q.degree;
-	product.coeffs = (int*) safe_malloc(MAX_POLYNOMIAL_SIZE * sizeof(int));
+    struct polynomial_matrix* result = make_polynomial_matrix(A->rows, B->cols);
 
-	for (int index = 0; index <= product.degree; index++) 
-		product.coeffs[index] = 0;
+    /* Also equal to B->rows */
+    int m = A->cols;
 
-    /*Each term from P is multiplied with every other term from Q*/
-	for (int P_index = 0; P_index <= P.degree; P_index++) 
-		for (int Q_index = 0; Q_index <= Q.degree; Q_index++) 
-			product.coeffs[P_index + Q_index] += P.coeffs[P_index] * Q.coeffs[Q_index];
+    int* zero = {0};
     
-	return product;
+    for (int r = 0; r < result->rows; r++) {
+        for (int c = 0; c < result->cols; c++) {
+            MATRIX_ELEMENT(result, r, c) = make_polynomial(0, zero);
+            for (int i = 0; i < m; i++) {
+                MATRIX_ELEMENT(result, r, c) = add_polynomials(
+                    MATRIX_ELEMENT(result, r, c),
+                    multiply_polynomials(MATRIX_ELEMENT(A, r, i), MATRIX_ELEMENT(result, i, c))
+                );
+            }
+        }
+    }
+
+    return result;
+
 }
