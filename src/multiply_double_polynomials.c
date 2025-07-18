@@ -23,7 +23,7 @@
 struct double_polynomial multiply_double_polynomials(struct double_polynomial P, struct double_polynomial Q) {
 	struct double_polynomial product;
 	product.degree = P.degree + Q.degree;
-	product.coeffs = (int*)safe_malloc(MAX_POLYNOMIAL_SIZE * sizeof(double));
+	product.coeffs = (double*)safe_malloc(MAX_POLYNOMIAL_SIZE * sizeof(double));
 	for (int index = 0; index <= product.degree; index++) 
 		product.coeffs[index] = 0;
     /*Each term from P is multiplied with every other term from Q*/
