@@ -69,6 +69,7 @@ struct double_polynomial {
 
 extern struct polynomial initialize_polynomial(void);
 extern struct polynomial make_polynomial(size_t degree, int* coeffs);
+extern struct polynomial multiply_polynomials(struct polynomial P, struct polynomial Q);
 
 extern struct double_polynomial initialize_double_polynomial(void);
 extern struct double_polynomial make_double_polynomial(size_t degree, double* coeffs);
