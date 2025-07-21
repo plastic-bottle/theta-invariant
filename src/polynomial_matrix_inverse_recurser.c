@@ -63,11 +63,8 @@ void polynomial_matrix_inverse_recurser(struct polynomial_matrix* const F, int* 
     shifted_minimal_nullspace_basis(F_d, s_array, N_l, N_l_cdegs);
 
     /* Calculate the new entries of the working matrix after multiplication with the nullspace matrix */
-    struct polynomial_matrix* R_u = make_polynomial_pointer_matrix(F_u->rows, N_l->cols);
-    /* R_u = F_u * N_l */
-
-    struct polynomial_matrix* R_d = make_polynomial_pointer_matrix(F_d->rows, N_r->cols);
-    /* R_d = F_d * N_r */
+    struct polynomial_matrix* R_u = multiply_polynomial_matrices(F_u, N_l);
+    struct polynomial_matrix* R_d = multiply_polynomial_matrices(F_d, N_r);
 
     /* Update A with our nullspace matrix */
     for (int r = 0; r < F->rows; r++) {

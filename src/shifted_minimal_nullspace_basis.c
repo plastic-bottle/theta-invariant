@@ -40,8 +40,7 @@ void shifted_minimal_nullspace_basis(struct polynomial_matrix* F, int* s_array, 
     right_order_basis(F, ORDER_CONST*s, s_array, P, b_array);
 
     /* Product of F and P */
-    struct polynomial_matrix* FP = (void*) 0;
-    FP = mnb_fast_multiplication(F, P);
+    struct polynomial_matrix* FP = multiply_polynomial_matrices(F, P);
 
     /* Assuming that all of P1 will come at the left of P - should verify this assumption later */
     int P1_cols = 0;
@@ -122,17 +121,15 @@ void shifted_minimal_nullspace_basis(struct polynomial_matrix* F, int* s_array, 
     int* u_array = (void*) 0;
     shifted_minimal_nullspace_basis(G1, t_array, N1, u_array);
 
+    struct polynomial_matrix* G2N1 = multiply_polynomial_matrices(G2, N1);
+
     struct polynomial_matrix* N2 = (void*) 0;
     int* v_array = (void*) 0;
-    shifted_minimal_nullspace_basis(mnb_fast_multiplication(G2, N1), u_array, N2, v_array);
+    shifted_minimal_nullspace_basis(G2N1, u_array, N2, v_array);
 
-    struct polynomial_matrix* Q = mnb_fast_multiplication(N1, N2);
+    struct polynomial_matrix* Q = multiply_polynomial_matrices(N1, N2);
 
-    /* Recall that P2 has n rows */
-    struct polynomial_matrix* P2Q = make_polynomial_matrix(n, Q->cols);
-    /* Write P2Q calculation using the method from page 370 -----------------------------------------------------------------------*/
-    
-
+    struct polynomial_matrix* P2Q = multiply_polynomial_matrices(P2, Q);
 
     /* Note that this also handles the case where F and nullspace_basis point to the same thing */
     if (nullspace_basis != NULL) {
@@ -172,6 +169,7 @@ void shifted_minimal_nullspace_basis(struct polynomial_matrix* F, int* s_array, 
     delete_polynomial_matrix(G2);
     delete_polynomial_matrix(N1);
     delete_polynomial_matrix(N2);
+    delete_polynomial_matrix(G2N1);
     delete_polynomial_matrix(P2Q);
     safe_free(b_array);
     safe_free(t_array);
