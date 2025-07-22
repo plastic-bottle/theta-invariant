@@ -155,9 +155,9 @@ extern void shifted_right_order_basis(struct polynomial_matrix* F, int order, in
 extern void shifted_minimal_nullspace_basis(struct polynomial_matrix* F, int* s_array, struct polynomial_matrix* nullspace_basis, int* s_col_degs);
 
 /* Uses the inversion algorithm proposed in Zhou, Labahn, and Storjohann (2014) */
-/* Inverts F, puts inverse in inverse and common denominator (which is guaranteed to be a factor of the determinant) in denominator */
+/* Inverts F, multiplies by determinant, and puts adjugate in adjugate  */
 /* If any input and result arguments are identical, then old memory will be freed and new memory will be allocated */
-extern void polynomial_matrix_inverse(struct polynomial_matrix* F, struct polynomial_matrix* inverse, struct polynomial* denominator);
+extern void polynomial_matrix_adjugate(struct polynomial_matrix* F, struct polynomial* determinant, struct polynomial_matrix* adjugate);
 
 /* Helper function for polynomial_matrix_inverse */
 /* DO NOT CALL THIS OUTSIDE OF polynomial_matrix_inverse */

@@ -22,6 +22,7 @@
 struct polynomial_matrix* multiply_polynomial_matrices(struct polynomial_matrix* A, struct polynomial_matrix* B)
 {
     struct polynomial_matrix* result = make_polynomial_matrix(A->rows, B->cols);
+    struct polynomial temp;
 
     /* Also equal to B->rows */
     int m = A->cols;
@@ -32,10 +33,12 @@ struct polynomial_matrix* multiply_polynomial_matrices(struct polynomial_matrix*
         for (int c = 0; c < result->cols; c++) {
             MATRIX_ELEMENT(result, r, c) = make_polynomial(0, zero);
             for (int i = 0; i < m; i++) {
-                MATRIX_ELEMENT(result, r, c) = add_polynomials(
+                temp = add_polynomials(
                     MATRIX_ELEMENT(result, r, c),
                     multiply_polynomials(MATRIX_ELEMENT(A, r, i), MATRIX_ELEMENT(result, i, c))
                 );
+                safe_free(MATRIX_ELEMENT(result, r, c).coeffs);
+                MATRIX_ELEMENT(result, r, c) = temp;
             }
         }
     }
