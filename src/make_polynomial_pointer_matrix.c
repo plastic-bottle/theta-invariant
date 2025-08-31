@@ -28,9 +28,9 @@ struct polynomial_pointer_matrix* make_polynomial_pointer_matrix(const size_t ro
     result->cols = cols;
 
     result->data = (struct polynomial**) safe_malloc(rows * cols * sizeof(struct polynomial*));
-    for (int i = 0; i < result->rows * result->cols; i++) {
+    /* for (int i = 0; i < result->rows * result->cols; i++) {
         result->data[i] = (struct polynomial*) safe_malloc(sizeof(struct polynomial));
-    }
+    }*/
 
     return result;
 }
