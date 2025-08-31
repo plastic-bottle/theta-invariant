@@ -90,6 +90,29 @@ struct laurent_polynomial {
 	signed int* coeffs;
 };
 
+/* The degree shift for the bivariate polynomial */
+#define DEGREE_SHIFT (3 * MAX_CROSSINGS)
+
+/* The maximum dimension of a bivariate polynomial */
+#define MAX_BIVARIATE_POLYNOMIAL_SIZE (6 * MAX_CROSSINGS + 1)
+//might have to change to -6n - 3 to 6n + 9
+
+/* Struct for laurent polynomial in two variables with integer coefficients */
+/* coeffs[i][j] stores the coefficient of T1^{i - DEGREE_SHIFT] * T2^[j - DEGREE_SHIFT] */
+struct bivariate_polynomial {
+	signed int lowest_degree_1;
+	signed int lowest_degree_2;
+	signed int highest_degree_1;
+	signed int highest_degree_2;
+	struct int_matrix* coeffs;
+};
+
+extern struct bivariate_polynomial initialize_bivariate_polynomial(void);
+extern struct bivariate_polynomial add_bivariate_polynomials(struct bivariate_polynomial P, struct bivariate_polynomial Q);
+extern struct bivariate_polynomial scale_bivariate_polynomial(struct bivariate_polynomial P, THETA_INT scale_factor);
+extern struct bivariate_polynomial multiply_bivariate_polynomials(struct bivariate_polynomial P, struct bivariate_polynomial Q);
+extern struct bivariate_polynomial copy_polynomial(struct polynomial P, int variable_index, int shift);
+
 /* Macro for accessing elements of a pointer to a matrix */
 #define MATRIX_ELEMENT(A, row, col) A->data[(size_t) (row) * A->cols + (size_t) (col)]
 
@@ -198,6 +221,7 @@ struct knot {
 
 extern struct knot make_knot(const int number_of_crossings, struct crossing* const crossings);
 extern int* rotation_numbers(const struct knot* const K);
+extern struct bivariate_polynomial theta_polynomial(const struct knot* const K);
 
 /* Struct for linked list of integers; stores integer value and pointers to previous/next elements */
 struct linked_list {
