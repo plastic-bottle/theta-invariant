@@ -40,7 +40,7 @@ void polynomial_matrix_inverse_recurser(struct polynomial_matrix* const F, int* 
         return;
     }
 
-    int chop = F->rows / 2;
+    int chop = (F->rows + 1) / 2;
 
     /* Initialize F_u and F_d */
     struct polynomial_matrix* F_u = (struct polynomial_matrix*) safe_malloc(sizeof(struct polynomial_matrix));

@@ -71,6 +71,8 @@ extern struct polynomial initialize_polynomial(void);
 extern struct polynomial make_polynomial(size_t degree, int* coeffs);
 extern struct polynomial add_polynomials(struct polynomial P, struct polynomial Q);
 extern struct polynomial multiply_polynomials(struct polynomial P, struct polynomial Q);
+/* Calculates the quotient P/Q, throws away remainder */
+extern struct polynomial divide_polynomials(struct polynomial P, struct polynomial Q);
 
 extern struct double_polynomial initialize_double_polynomial(void);
 extern struct double_polynomial make_double_polynomial(size_t degree, double* coeffs);
@@ -154,6 +156,7 @@ extern struct polynomial_matrix* multiply_polynomial_matrices(struct polynomial_
 extern struct polynomial_pointer_matrix* make_polynomial_pointer_matrix(const size_t rows, const size_t cols);
 /* Deallocates memory for a polynomial pointer matrix */
 extern void delete_polynomial_pointer_matrix(struct polynomial_pointer_matrix* A);
+extern struct polynomial_pointer_matrix* multiply_polynomial_pointer_matrices(struct polynomial_pointer_matrix* A, struct polynomial_pointer_matrix* B)
 
 /* Allocates memory for a float matrix */
 extern struct float_matrix* make_float_matrix(const size_t rows, const size_t cols);
@@ -178,9 +181,8 @@ extern void shifted_right_order_basis(struct polynomial_matrix* F, int order, in
 extern void shifted_minimal_nullspace_basis(struct polynomial_matrix* F, int* s_array, struct polynomial_matrix* nullspace_basis, int* s_col_degs);
 
 /* Uses the inversion algorithm proposed in Zhou, Labahn, and Storjohann (2014) */
-/* Inverts F, multiplies by determinant, and puts adjugate in adjugate  */
-/* If any input and result arguments are identical, then old memory will be freed and new memory will be allocated */
-extern void polynomial_matrix_adjugate(struct polynomial_matrix* F, struct polynomial* determinant, struct polynomial_matrix* adjugate);
+/* Inverts F, multiplies by determinant, and returns adjugate */
+extern struct polynomial_matrix* polynomial_matrix_adjugate(struct polynomial_matrix* F, struct polynomial determinant);
 
 /* Helper function for polynomial_matrix_inverse */
 /* DO NOT CALL THIS OUTSIDE OF polynomial_matrix_inverse */

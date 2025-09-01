@@ -20,14 +20,13 @@
 #include "theta_implementation.h"
 
 /* Uses the inversion algorithm proposed in Zhou, Labahn, and Storjohann (2014) */
-/* Inverts F, multiplies by determinant, and puts adjugate in adjugate  */
-/* If any input and result arguments are identical, then old memory will be freed and new memory will be allocated */
-void polynomial_matrix_adjugate(struct polynomial_matrix* F, struct polynomial* determinant, struct polynomial_matrix* adjugate)
+/* Inverts F, multiplies by determinant, and returns adjugate */
+struct polynomial_matrix* polynomial_matrix_adjugate(struct polynomial_matrix* F, struct polynomial determinant)
 {
     n = F->rows;
     
     if (n == 0) {
-        return;
+        return F;
     }
 
     /* Compute ceil(log_2(n)) */
@@ -66,8 +65,34 @@ void polynomial_matrix_adjugate(struct polynomial_matrix* F, struct polynomial* 
     /* Call the recurser function */
     polynomial_matrix_inverse_recurser(F, s_array, A, 0, B);
 
-    /* Compute big matrix product A_1 A_2 ... A_last B^-1 = F^-1 */
-    /* code later */
+    /* Recall that A_1 A_2 ... A_last B^-1 = F^-1 */
+    /* We will begin by computing A_prod = A_1 A_2 ... A_last */
+
+    struct polynomial_pointer_matrix* A_prod;
+    if (A_length == 1) {
+        A_prod = A;
+    } else {
+        /* A_1 * A_2 */
+        A_prod = multiply_polynomial_pointer_matrices(A, A+1);
+        
+        /* Multiply everything else */
+        struct polynomial_pointer_matrix* A_temp_prod;
+        for (int i = 2; i < A_length; i++) {
+            A_temp_prod = A_prod;
+            A_prod = multiply_polynomial_pointer_matrices(A_temp_prod, A+i);
+            delete_polynomial_pointer_matrix(A_temp_prod);
+        }
+    }
+
+    /* We now have A_prod * B^-1 = F^-1 */
+    /* This becomes det F * A_prod * B^-1 = adj F */
+    
+    struct polynomial_matrix* det_F_times_A_prod = make_polynomial_matrix(A_prod->rows, A_prod->cols);
+    for (int r = 0; r < A->rows; r++) {
+        for (int c = 0; c < A->cols; c++) {
+            MATRIX_ELEMENT(det_F_times_A_prod, r, c) = multiply_polynomials(determinant, *MATRIX_ELEMENT(A_prod, r, c));
+        }
+    }
 
     /* Free memory for A */
     for (int i = 0; i < A_length; i++) {
@@ -80,6 +105,24 @@ void polynomial_matrix_adjugate(struct polynomial_matrix* F, struct polynomial* 
     }
     safe_free(A);
 
+    /* Free memory for A_prod */
+    if (A_length != 1) {
+        delete_polynomial_pointer_matrix(A_prod);
+    }
+
+    /* The last step is to find det_F_times_A_prod * B^-1 = adj F */
+    struct polynomial_matrix* adjugate = make_polynomial_matrix(n, n);
+    for (int r = 0; r < n; r++) {
+        for (int c = 0; c < n; c++) {
+            MATRIX_ELEMENT(adjugate, r, c) = divide_polynomials(MATRIX_ELEMENT(det_F_times_A_prod, r, c), B[c]);
+        }
+    }
+
+    /* Free memory for det_f_times_A_prod */
+    if (A_length != 1) {
+        delete_polynomial_matrix(det_f_times_A_prod);
+    }
+
     /* Free memory for B */
     for (int i = 0; i < n; i++) {
         safe_free(B[i]->coeffs);
@@ -89,4 +132,5 @@ void polynomial_matrix_adjugate(struct polynomial_matrix* F, struct polynomial* 
 
     /* s_array is already freed by the recurser algorithm */
 
+    return adjugate;
 }
