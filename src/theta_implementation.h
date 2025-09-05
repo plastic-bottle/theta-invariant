@@ -115,6 +115,7 @@ extern struct bivariate_polynomial scale_bivariate_polynomial(struct bivariate_p
 extern struct bivariate_polynomial multiply_bivariate_polynomials(struct bivariate_polynomial P, struct bivariate_polynomial Q);
 extern struct bivariate_polynomial copy_polynomial(struct polynomial P, int variable_index, int shift);
 extern struct bivariate_polynomial theta_synthetic_division(struct bivariate_polynomial P);
+extern void print_bivariate_polynomial(struct bivariate_polynomial P);
 
 /* Macro for accessing elements of a pointer to a matrix */
 #define MATRIX_ELEMENT(A, row, col) A->data[(size_t) (row) * A->cols + (size_t) (col)]
