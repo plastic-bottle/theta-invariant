@@ -132,7 +132,7 @@ struct polynomial_pointer_matrix {
 	size_t rows;
 	size_t cols;
 	struct polynomial** data;
-}
+};
 
 /* Matrix of floats */
 struct float_matrix {
@@ -158,7 +158,7 @@ extern struct polynomial_matrix* multiply_polynomial_matrices(struct polynomial_
 extern struct polynomial_pointer_matrix* make_polynomial_pointer_matrix(const size_t rows, const size_t cols);
 /* Deallocates memory for a polynomial pointer matrix */
 extern void delete_polynomial_pointer_matrix(struct polynomial_pointer_matrix* A);
-extern struct polynomial_pointer_matrix* multiply_polynomial_pointer_matrices(struct polynomial_pointer_matrix* A, struct polynomial_pointer_matrix* B)
+extern struct polynomial_pointer_matrix* multiply_polynomial_pointer_matrices(struct polynomial_pointer_matrix* A, struct polynomial_pointer_matrix* B);
 
 /* Allocates memory for a float matrix */
 extern struct float_matrix* make_float_matrix(const size_t rows, const size_t cols);
