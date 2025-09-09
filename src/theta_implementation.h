@@ -167,10 +167,6 @@ extern struct float_matrix* make_float_matrix(const size_t rows, const size_t co
 extern struct int_matrix* make_int_matrix(const size_t rows, const size_t cols);
 
 
-/* Puts results in order_basis */
-/* If the input and result arguments are identical, then old memory will be freed and new memory will be allocated */
-extern void right_order_basis(struct polynomial_matrix* F, int order, struct polynomial_matrix* order_basis);
-
 /* Puts results in order_basis and s_col_degs */
 /* If the input and result arguments are identical, then old memory will be freed and new memory will be allocated */
 extern void shifted_right_order_basis(struct polynomial_matrix* F, int order, int* s_array, struct polynomial_matrix* order_basis, int* s_col_degs);

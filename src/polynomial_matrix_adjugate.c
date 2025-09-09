@@ -23,14 +23,14 @@
 /* Inverts F, multiplies by determinant, and returns adjugate */
 struct polynomial_matrix* polynomial_matrix_adjugate(struct polynomial_matrix* F, struct polynomial determinant)
 {
-    n = F->rows;
+    int n = F->rows;
     
     if (n == 0) {
         return F;
     }
 
     /* Compute ceil(log_2(n)) */
-    int A_length = 0
+    int A_length = 0;
     size_t temp = n - 1;
     while (temp != 0) {
         temp = temp >> 1;
@@ -57,7 +57,7 @@ struct polynomial_matrix* polynomial_matrix_adjugate(struct polynomial_matrix* F
     for (int c = 0; c < n; c++) {
         max = 0;
         for (int r = 0; r < n; r++) {
-            if (MATRIX_ELEMENT(F, r, c).degree > max) max = MATRIX_ELEMENT(F, r, c);
+            if (MATRIX_ELEMENT(F, r, c).degree > max) max = MATRIX_ELEMENT(F, r, c).degree;
         }
         s_array[c] = max;
     }
@@ -114,13 +114,13 @@ struct polynomial_matrix* polynomial_matrix_adjugate(struct polynomial_matrix* F
     struct polynomial_matrix* adjugate = make_polynomial_matrix(n, n);
     for (int r = 0; r < n; r++) {
         for (int c = 0; c < n; c++) {
-            MATRIX_ELEMENT(adjugate, r, c) = divide_polynomials(MATRIX_ELEMENT(det_F_times_A_prod, r, c), B[c]);
+            MATRIX_ELEMENT(adjugate, r, c) = divide_polynomials(MATRIX_ELEMENT(det_F_times_A_prod, r, c), *B[c]);
         }
     }
 
     /* Free memory for det_f_times_A_prod */
     if (A_length != 1) {
-        delete_polynomial_matrix(det_f_times_A_prod);
+        delete_polynomial_matrix(det_F_times_A_prod);
     }
 
     /* Free memory for B */

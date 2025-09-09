@@ -44,11 +44,11 @@ void polynomial_matrix_inverse_recurser(struct polynomial_matrix* const F, int* 
 
     /* Initialize F_u and F_d */
     struct polynomial_matrix* F_u = (struct polynomial_matrix*) safe_malloc(sizeof(struct polynomial_matrix));
-    result->rows = chop;
-    result->cols = F->cols;
+    F_u->rows = chop;
+    F_u->cols = F->cols;
     struct polynomial_matrix* F_d = (struct polynomial_matrix*) safe_malloc(sizeof(struct polynomial_matrix));
-    result->rows = F->rows - chop;
-    result->cols = F->cols;
+    F_d->rows = F->rows - chop;
+    F_d->cols = F->cols;
     /* Transfer memory from F to F_u and F_d */
     F_u->data = F->data;
     F_d->data = F->data + chop * F->cols;

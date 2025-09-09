@@ -37,7 +37,7 @@ void shifted_minimal_nullspace_basis(struct polynomial_matrix* F, int* s_array, 
     /* s-column degrees of P */
     int* b_array = (int*) safe_malloc(n * sizeof(int));
 
-    right_order_basis(F, ORDER_CONST*s, s_array, P, b_array);
+    shifted_right_order_basis(F, ORDER_CONST*s, s_array, P, b_array);
 
     /* Product of F and P */
     struct polynomial_matrix* FP = multiply_polynomial_matrices(F, P);
@@ -129,6 +129,14 @@ void shifted_minimal_nullspace_basis(struct polynomial_matrix* F, int* s_array, 
 
     struct polynomial_matrix* Q = multiply_polynomial_matrices(N1, N2);
 
+    struct polynomial_matrix* P2 = make_polynomial_matrix(n, P->cols - P1_cols);
+    for (int r = 0; r < P2->rows; r++) {
+        /* Copy elements from P to P2 */
+        for (int c = 0; c < P2->cols; c++) {
+            MATRIX_ELEMENT(P2, r, c) = MATRIX_ELEMENT(P, r, c + P1_cols);
+        }
+    }
+
     struct polynomial_matrix* P2Q = multiply_polynomial_matrices(P2, Q);
 
     /* Note that this also handles the case where F and nullspace_basis point to the same thing */
@@ -160,16 +168,18 @@ void shifted_minimal_nullspace_basis(struct polynomial_matrix* F, int* s_array, 
     }
     for (int i = 0; i < P2Q->cols; i++) {
         /* I think that we need to shift v back by ORDER_CONST*c */
-        s_col_degs[i + P1_cols] = v_array[i] + ORDER_CONST*c;
+        s_col_degs[i + P1_cols] = v_array[i] + ORDER_CONST*s;
     }
 
     delete_polynomial_matrix(P);
+    delete_polynomial_matrix(P2);
     delete_polynomial_matrix(FP);
     delete_polynomial_matrix(G1);
     delete_polynomial_matrix(G2);
     delete_polynomial_matrix(N1);
     delete_polynomial_matrix(N2);
     delete_polynomial_matrix(G2N1);
+    delete_polynomial_matrix(Q);
     delete_polynomial_matrix(P2Q);
     safe_free(b_array);
     safe_free(t_array);

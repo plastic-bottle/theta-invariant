@@ -31,7 +31,8 @@ struct polynomial_pointer_matrix* multiply_polynomial_pointer_matrices(struct po
     
     for (int r = 0; r < result->rows; r++) {
         for (int c = 0; c < result->cols; c++) {
-            MATRIX_ELEMENT(result, r, c) = &make_polynomial(0, zero);
+            struct polynomial temp_polynomial = make_polynomial(0, zero);
+            MATRIX_ELEMENT(result, r, c) = &temp_polynomial;
             for (int i = 0; i < m; i++) {
                 temp = add_polynomials(
                     *MATRIX_ELEMENT(result, r, c),
