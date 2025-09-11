@@ -112,7 +112,6 @@ struct bivariate_polynomial theta_polynomial(const struct knot* const K) {
 	zero, P_8, P_9, P_3, P_4, P_2, P_1,
 	zero, P_8, P_9, P_3, P_7, P_2, P_1,
 	zero, zero, zero, zero, zero, zero, P_1 };
-	A_adjugate->data = (struct polynomial*)safe_malloc(A->rows * A->cols * sizeof(struct polynomial));
 	A_adjugate->data = data;*/
 
 	int alexander_degree_shift = - 2 * n - 1 - (writhe + total_rotation) / 2;
@@ -421,7 +420,6 @@ struct bivariate_polynomial theta_polynomial(const struct knot* const K) {
 	T2_minus_1_numerator = add_bivariate_polynomials(T2_minus_1_numerator, T2_minus_1_delta12_product);
 	struct bivariate_polynomial T2_minus_1_quotient = theta_synthetic_division(T2_minus_1_numerator);
 	theta = add_bivariate_polynomials(theta, T2_minus_1_quotient);
-	print_bivariate_polynomial(theta);
 
 	return theta;
 }
