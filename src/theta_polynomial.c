@@ -80,14 +80,44 @@ struct bivariate_polynomial theta_polynomial(const struct knot* const K) {
 	
 	//find adjugate of A and its determinant to get Alexander polynomial
 	struct polynomial_matrix* A_adjugate = (struct polynomial_matrix*)safe_malloc(sizeof(struct polynomial_matrix));
-	A_adjugate->rows = A->rows;
+	
+	//Code below inputs data for trefoil into A and the determinant
+	/*A_adjugate->rows = A->rows;
 	A_adjugate->cols = A->cols;
+	int P_1_coeffs[] = { 0, 0, 0, 0, 0, 0, 0, 1, -1, 1 };
+	struct polynomial P_1 = make_polynomial(9, P_1_coeffs);
+	int P_2_coeffs[] = { 0, 0, 0, 0, 0, 0, 1, -1, 1 };
+	struct polynomial P_2 = make_polynomial(8, P_2_coeffs);
+	int P_3_coeffs[] = { 0, 0, 0, 0, 0, 0, 1, -1 };
+	struct polynomial P_3 = make_polynomial(7, P_3_coeffs);
+	int P_4_coeffs[] = { 0, 0, 0, 0, 0, 0, 0, 2, -2, 1 };
+	struct polynomial P_4 = make_polynomial(9, P_4_coeffs);
+	int P_5_coeffs[] = { 0, 0, 0, 0, 0, 0, 1 };
+	struct polynomial P_5 = make_polynomial(6, P_5_coeffs);
+	int P_6_coeffs[] = { 0, 0, 0, 0, 0, 0, 0, 1 };
+	struct polynomial P_6 = make_polynomial(7, P_6_coeffs);
+	int P_7_coeffs[] = { 0, 0, 0, 0, 0, 0, 0, 1, -1 };
+	struct polynomial P_7 = make_polynomial(8, P_7_coeffs);
+	int P_8_coeffs[] = { 0, 0, 0, 0, 0, 0, 1, -2, 1 };
+	struct polynomial P_8 = make_polynomial(8, P_8_coeffs);
+	int P_9_coeffs[] = { 0, 0, 0, 0, 0, 0, 0, 1, -2, 1 };
+	struct polynomial P_9 = make_polynomial(9, P_9_coeffs);
+	int det_coeffs[] = { 0, 0, 0, 0, 0, 0, 0, 0, 1, -1, 1 };
+	struct polynomial A_determinant = make_polynomial(10, det_coeffs);
+	struct polynomial zero = initialize_polynomial();
+	struct polynomial data[] = { P_1, P_2, P_1, P_2, P_1, P_2, P_1,
+	zero, P_2, P_1, P_2, P_1, P_2, P_1,
+	zero, P_3, P_4, P_5, P_6, P_2, P_1,
+	zero, P_3, P_7, P_5, P_6, P_2, P_1,
+	zero, P_8, P_9, P_3, P_4, P_2, P_1,
+	zero, P_8, P_9, P_3, P_7, P_2, P_1,
+	zero, zero, zero, zero, zero, zero, P_1 };
 	A_adjugate->data = (struct polynomial*)safe_malloc(A->rows * A->cols * sizeof(struct polynomial));
-	struct polynomial A_determinant = initialize_polynomial();
+	A_adjugate->data = data;*/
+
 	int alexander_degree_shift = - 2 * n - 1 - (writhe + total_rotation) / 2;
 	int adjugate_degree_shift = -2 * n - (writhe + total_rotation) / 2;
 
-	/*Split up terms in theta calculation based on which Alexander polynomials it must be multiplied by, and also if it lies over T2 - 1*/
 	struct bivariate_polynomial theta = initialize_bivariate_polynomial();
 	int delta_123_coefficient = (writhe - total_rotation) / 2;
 	struct bivariate_polynomial delta12_coefficient = initialize_bivariate_polynomial();
@@ -100,10 +130,9 @@ struct bivariate_polynomial theta_polynomial(const struct knot* const K) {
 	struct bivariate_polynomial T2_minus_1_delta2_coefficient = initialize_bivariate_polynomial();
 	struct bivariate_polynomial T2_minus_1_delta3_coefficient = initialize_bivariate_polynomial();
 
-	int one_coeffs = { 1 };
+	int one_coeffs[] = {1};
 	struct polynomial one_polynomial = make_polynomial(0, one_coeffs);
-	struct bivariate_polynomial one_bivariate = initialize_bivariate_polynomial();
-	MATRIX_ELEMENT(one_bivariate.coeffs, DEGREE_SHIFT, DEGREE_SHIFT) = 1;
+	struct bivariate_polynomial one_bivariate = copy_polynomial(one_polynomial, 1, 0);
 	struct bivariate_polynomial T1 = copy_polynomial(one_polynomial, 1, 1);
 	struct bivariate_polynomial T1_inverse = copy_polynomial(one_polynomial, 1, -1);
 	struct bivariate_polynomial T2 = copy_polynomial(one_polynomial, 2, 1);
@@ -111,28 +140,26 @@ struct bivariate_polynomial theta_polynomial(const struct knot* const K) {
 	struct bivariate_polynomial T3 = copy_polynomial(one_polynomial, 3, 1);
 	struct bivariate_polynomial T3_inverse = copy_polynomial(one_polynomial, 3, -1);
 
-	/*Compute all terms for theta*/
 	for (int crossing = 0; crossing < n; crossing++) {
 		int sign = crossing_signs[crossing];
 		int incoming_over;
-		int incoming_under;
+		int incoming_under = K->crossings[crossing].data[0];
 		if (sign == 1) {
-			int incoming_over = K->crossings[crossing].data[1];
-			int incoming_under = K->crossings[crossing].data[0];
+			incoming_over = K->crossings[crossing].data[1];
 		}
 		else {
-			int incoming_over = K->crossings[crossing].data[3];
-			int incoming_under = K->crossings[crossing].data[0];
+			incoming_over = K->crossings[crossing].data[3];
 		}
 		struct bivariate_polynomial current_term;
 		struct bivariate_polynomial factor;
 		struct bivariate_polynomial common_factor;
+
 		current_term =  copy_polynomial(MATRIX_ELEMENT(A_adjugate, incoming_over - 1, incoming_over - 1), 3, adjugate_degree_shift);
 		current_term = scale_bivariate_polynomial(current_term, -sign);
 		delta12_coefficient = add_bivariate_polynomials(delta12_coefficient, current_term);
 
 		current_term = copy_polynomial(MATRIX_ELEMENT(A_adjugate, incoming_over - 1, incoming_over - 1), 1, adjugate_degree_shift);
-		factor = copy_polynomial(MATRIX_ELEMENT(A_adjugate, incoming_over - 1, incoming_under - 1), 2, adjugate_degree_shift);
+		factor = copy_polynomial(MATRIX_ELEMENT(A_adjugate, incoming_under - 1, incoming_over - 1), 2, adjugate_degree_shift);
 		current_term = multiply_bivariate_polynomials(current_term, factor);
 		if (sign == 1)
 			factor = T2;
@@ -227,9 +254,10 @@ struct bivariate_polynomial theta_polynomial(const struct knot* const K) {
 		factor = copy_polynomial(MATRIX_ELEMENT(A_adjugate, incoming_under - 1, incoming_over - 1), 1, adjugate_degree_shift);
 		current_term = multiply_bivariate_polynomials(current_term, factor);
 		current_term = multiply_bivariate_polynomials(current_term, common_factor);
+		current_term = scale_bivariate_polynomial(current_term, -1);
 		T2_minus_1_delta3_coefficient = add_bivariate_polynomials(T2_minus_1_delta3_coefficient, current_term);
 
-		current_term = copy_polynomial(MATRIX_ELEMENT(A_adjugate, incoming_under - 1, incoming_under - 1), 1, adjugate_degree_shift);
+		current_term = copy_polynomial(MATRIX_ELEMENT(A_adjugate, incoming_under - 1, incoming_over - 1), 1, adjugate_degree_shift);
 		factor = copy_polynomial(MATRIX_ELEMENT(A_adjugate, incoming_under - 1, incoming_over - 1), 2, adjugate_degree_shift);
 		current_term = multiply_bivariate_polynomials(current_term, factor);
 		current_term = multiply_bivariate_polynomials(current_term, common_factor);
@@ -264,6 +292,7 @@ struct bivariate_polynomial theta_polynomial(const struct knot* const K) {
 		else
 			factor = T2_inverse;
 		current_term = multiply_bivariate_polynomials(current_term, factor);
+		current_term = scale_bivariate_polynomial(current_term, -1);
 		T2_minus_1_delta2_coefficient = add_bivariate_polynomials(T2_minus_1_delta2_coefficient, current_term);
 
 		current_term = copy_polynomial(MATRIX_ELEMENT(A_adjugate, incoming_over - 1, incoming_under - 1), 2, adjugate_degree_shift);
@@ -294,19 +323,18 @@ struct bivariate_polynomial theta_polynomial(const struct knot* const K) {
 			factor = T2_inverse;
 		factor = add_bivariate_polynomials(factor, one_bivariate);
 		current_term = multiply_bivariate_polynomials(current_term, factor);
+		current_term = scale_bivariate_polynomial(current_term, -1);
 		T2_minus_1_delta2_coefficient = add_bivariate_polynomials(T2_minus_1_delta2_coefficient, current_term);
 
 		for (int other_crossing = 0; other_crossing < n; other_crossing++) {
 			int other_sign = crossing_signs[other_crossing];
 			int other_incoming_over;
-			int other_incoming_under;
+			int other_incoming_under = K->crossings[other_crossing].data[0];
 			if (other_sign == 1) {
-				int other_incoming_over = K->crossings[other_crossing].data[1];
-				int other_incoming_under = K->crossings[other_crossing].data[0];
+				other_incoming_over = K->crossings[other_crossing].data[1];
 			}
 			else {
-				int other_incoming_over = K->crossings[other_crossing].data[3];
-				int other_incoming_under = K->crossings[other_crossing].data[0];
+				other_incoming_over = K->crossings[other_crossing].data[3];
 			}
 
 			common_factor = copy_polynomial(MATRIX_ELEMENT(A_adjugate, other_incoming_under - 1, incoming_over - 1), 1, adjugate_degree_shift);
@@ -361,19 +389,17 @@ struct bivariate_polynomial theta_polynomial(const struct knot* const K) {
 	}
 
 	for (int strand = 1; strand <= 2 * n + 1; strand++) {
-		struct bivariate_polynomial term = copy_polynomial(MATRIX_ELEMENT(A_adjugate, strand - 1, strand - 1), 3, adjugate_degree_shift);
-		scale_bivariate_polynomial(term, rotation[strand]);
-		delta12_coefficient = add_bivariate_polynomials(delta12_coefficient, term);
+		struct bivariate_polynomial current_term = copy_polynomial(MATRIX_ELEMENT(A_adjugate, strand - 1, strand - 1), 3, adjugate_degree_shift);
+		current_term = scale_bivariate_polynomial(current_term, rotation[strand]);
+		delta12_coefficient = add_bivariate_polynomials(delta12_coefficient, current_term);
 	}
 
-	/*Copy down the Alexander polynomial into the different variables*/
 	struct bivariate_polynomial delta1 = copy_polynomial(A_determinant, 1, alexander_degree_shift);
 	struct bivariate_polynomial delta2 = copy_polynomial(A_determinant, 2, alexander_degree_shift);
 	struct bivariate_polynomial delta3 = copy_polynomial(A_determinant, 3, alexander_degree_shift);
 	struct bivariate_polynomial delta12 = multiply_bivariate_polynomials(delta1, delta2);	
 	struct bivariate_polynomial delta123 = multiply_bivariate_polynomials(delta12, delta3);	
 
-	/*Finally add together the products with Alexander polynomials in different variables*/
 	struct bivariate_polynomial delta1_product = multiply_bivariate_polynomials(delta1, delta1_coefficient);
 	theta = add_bivariate_polynomials(theta, delta1_product);
 	struct bivariate_polynomial delta2_product = multiply_bivariate_polynomials(delta2, delta2_coefficient);
@@ -395,6 +421,7 @@ struct bivariate_polynomial theta_polynomial(const struct knot* const K) {
 	T2_minus_1_numerator = add_bivariate_polynomials(T2_minus_1_numerator, T2_minus_1_delta12_product);
 	struct bivariate_polynomial T2_minus_1_quotient = theta_synthetic_division(T2_minus_1_numerator);
 	theta = add_bivariate_polynomials(theta, T2_minus_1_quotient);
+	print_bivariate_polynomial(theta);
 
 	return theta;
 }
