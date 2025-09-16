@@ -35,6 +35,9 @@
 #define MAX(a, b) ((a > b) ? a : b)
 #define MIN(a, b) ((a < b) ? a : b)
 
+/* Swap two variables given their types */
+#define SWAP(x, y, type) do { const type SWAP_MACRO_TEMP = x; x = y; y = SWAP_MACRO_TEMP; } while (0)
+
 /* Symbolic constants for yes and no */
 enum { YES, NO };
 
