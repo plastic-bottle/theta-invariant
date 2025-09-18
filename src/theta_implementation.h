@@ -73,6 +73,7 @@ struct double_polynomial {
 extern struct polynomial initialize_polynomial(void);
 extern struct polynomial make_polynomial(size_t degree, int* coeffs);
 extern struct polynomial add_polynomials(struct polynomial P, struct polynomial Q);
+extern struct polynomial subtract_polynomials(struct polynomial P, struct polynomial Q);
 extern struct polynomial multiply_polynomials(struct polynomial P, struct polynomial Q);
 /* Calculates the quotient P/Q, throws away remainder */
 extern struct polynomial divide_polynomials(struct polynomial P, struct polynomial Q);
@@ -156,6 +157,7 @@ extern struct polynomial_matrix* make_polynomial_matrix(const size_t rows, const
 /* Deallocates memory for a polynomial matrix */
 extern void delete_polynomial_matrix(struct polynomial_matrix* A);
 extern struct polynomial_matrix* multiply_polynomial_matrices(struct polynomial_matrix* A, struct polynomial_matrix* B);
+extern struct polynomial polynomial_matrix_determinant(struct polynomial_matrix* A);
 
 /* Allocates memory for a polynomial pointer matrix */
 extern struct polynomial_pointer_matrix* make_polynomial_pointer_matrix(const size_t rows, const size_t cols);

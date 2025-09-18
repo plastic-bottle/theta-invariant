@@ -27,10 +27,10 @@ struct polynomial divide_polynomials(struct polynomial P, struct polynomial Q)
 	quotient.coeffs = (int*) safe_malloc((quotient.degree + 1) * sizeof(int));
 
     int current_coeff;
-	for (int result_index = quotient.degree; result_index >= 0; result_index--) {
-        current_coeff = P.coeffs[result_index + Q.degree] / Q.coeffs[Q.degree];
+	for (int result_index = (int) quotient.degree; result_index >= 0; result_index--) {
+        current_coeff = P.coeffs[result_index + (int) Q.degree] / Q.coeffs[(int) Q.degree];
         quotient.coeffs[result_index] = current_coeff;
-        for (int intermediate_index = Q.degree; intermediate_index >= 0; intermediate_index--) {
+        for (int intermediate_index = (int) Q.degree; intermediate_index >= 0; intermediate_index--) {
 		    P.coeffs[result_index + intermediate_index] -= current_coeff * Q.coeffs[intermediate_index];
         }
 	}

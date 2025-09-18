@@ -78,41 +78,9 @@ struct bivariate_polynomial theta_polynomial(const struct knot* const K) {
 		}
 	}
 	
-	//find adjugate of A and its determinant to get Alexander polynomial
-	struct polynomial_matrix* A_adjugate = (struct polynomial_matrix*)safe_malloc(sizeof(struct polynomial_matrix));
-	
-	//Code below inputs data for trefoil into A and the determinant
-	/*A_adjugate->rows = A->rows;
-	A_adjugate->cols = A->cols;
-	int P_1_coeffs[] = { 0, 0, 0, 0, 0, 0, 0, 1, -1, 1 };
-	struct polynomial P_1 = make_polynomial(9, P_1_coeffs);
-	int P_2_coeffs[] = { 0, 0, 0, 0, 0, 0, 1, -1, 1 };
-	struct polynomial P_2 = make_polynomial(8, P_2_coeffs);
-	int P_3_coeffs[] = { 0, 0, 0, 0, 0, 0, 1, -1 };
-	struct polynomial P_3 = make_polynomial(7, P_3_coeffs);
-	int P_4_coeffs[] = { 0, 0, 0, 0, 0, 0, 0, 2, -2, 1 };
-	struct polynomial P_4 = make_polynomial(9, P_4_coeffs);
-	int P_5_coeffs[] = { 0, 0, 0, 0, 0, 0, 1 };
-	struct polynomial P_5 = make_polynomial(6, P_5_coeffs);
-	int P_6_coeffs[] = { 0, 0, 0, 0, 0, 0, 0, 1 };
-	struct polynomial P_6 = make_polynomial(7, P_6_coeffs);
-	int P_7_coeffs[] = { 0, 0, 0, 0, 0, 0, 0, 1, -1 };
-	struct polynomial P_7 = make_polynomial(8, P_7_coeffs);
-	int P_8_coeffs[] = { 0, 0, 0, 0, 0, 0, 1, -2, 1 };
-	struct polynomial P_8 = make_polynomial(8, P_8_coeffs);
-	int P_9_coeffs[] = { 0, 0, 0, 0, 0, 0, 0, 1, -2, 1 };
-	struct polynomial P_9 = make_polynomial(9, P_9_coeffs);
-	int det_coeffs[] = { 0, 0, 0, 0, 0, 0, 0, 0, 1, -1, 1 };
-	struct polynomial A_determinant = make_polynomial(10, det_coeffs);
-	struct polynomial zero = initialize_polynomial();
-	struct polynomial data[] = { P_1, P_2, P_1, P_2, P_1, P_2, P_1,
-	zero, P_2, P_1, P_2, P_1, P_2, P_1,
-	zero, P_3, P_4, P_5, P_6, P_2, P_1,
-	zero, P_3, P_7, P_5, P_6, P_2, P_1,
-	zero, P_8, P_9, P_3, P_4, P_2, P_1,
-	zero, P_8, P_9, P_3, P_7, P_2, P_1,
-	zero, zero, zero, zero, zero, zero, P_1 };
-	A_adjugate->data = data;*/
+	/*Find determinant and adjugate of A*/
+	struct polynomial A_determinant = polynomial_matrix_determinant(A);
+	struct polynomial_matrix* A_adjugate = polynomial_matrix_adjugate(A, A_determinant);
 
 	int alexander_degree_shift = - 2 * n - 1 - (writhe + total_rotation) / 2;
 	int adjugate_degree_shift = -2 * n - (writhe + total_rotation) / 2;
