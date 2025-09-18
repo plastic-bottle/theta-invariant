@@ -22,6 +22,10 @@
 /* Calculates the quotient P/Q, throws away remainder */
 struct polynomial divide_polynomials(struct polynomial P, struct polynomial Q)
 {
+    if (P.degree == 0 && P.coeffs[0] == 0) {
+        return initialize_polynomial();
+    }
+    
     struct polynomial quotient;
 	quotient.degree = P.degree - Q.degree;
 	quotient.coeffs = (int*) safe_malloc((quotient.degree + 1) * sizeof(int));
