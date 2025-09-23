@@ -170,9 +170,12 @@ extern struct float_matrix* make_float_matrix(const size_t rows, const size_t co
 extern struct int_matrix* make_int_matrix(const size_t rows, const size_t cols);
 
 
+/* Base case for right order basis computation */
+extern struct polynomial_matrix* right_order_basis_base_case(struct int_matrix* A);
+
 /* Puts results in order_basis and s_col_degs */
 /* If the input and result arguments are identical, then old memory will be freed and new memory will be allocated */
-extern void shifted_right_order_basis(struct polynomial_matrix* F, int order, int* s_array, struct polynomial_matrix* order_basis, int* s_col_degs);
+extern void right_order_basis(struct polynomial_matrix* F, int order, int* s_array, struct polynomial_matrix* order_basis, int* s_col_degs);
 
 #define ORDER_CONST 3
 
